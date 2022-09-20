@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public boolean addUser(User user) throws UserAlreadyExistException {
 
-        Optional<User> optionalUser = userDao.findById(user.getEmail());
+        Optional<User> optionalUser = userDao.findByEmail(user.getEmail());
 
         if(optionalUser.isPresent()){
             throw new UserAlreadyExistException("UserName already exist");

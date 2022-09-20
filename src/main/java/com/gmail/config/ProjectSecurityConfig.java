@@ -17,7 +17,7 @@ public class ProjectSecurityConfig {
         httpSecurity.authorizeHttpRequests(auth ->{
             try {
                 auth.antMatchers("/mail","/register","/login").permitAll()
-                        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred","/deleteMail","/logout").authenticated()
+                        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred","/deleteMail","/logout","/deleteUser").authenticated()
                         .and().csrf().disable();
             } catch (Exception e) {
                 throw new RuntimeException(e);
