@@ -25,11 +25,15 @@ public class User {
 	
 	private String firstName;
 	
-	private String LastName;
+	private String lastName;
 	
 	private String mobileNumber;
 	
 	private LocalDate dateOfBirth;
+
+	private String password;
+
+	private String role;
 	
 	
 //	private List<Mail> allMails;
@@ -48,14 +52,14 @@ public class User {
 	@JsonIgnore
 	@JoinColumn(name = "Draft")
 	private List<Mail> draft;
-	
-	
+
+
 	@OneToMany
 	@JsonIgnore
 	@JoinColumn(name = "Starred")
 	private List<Mail> starred;
-	
-	
-		
+
+
+
 }
 

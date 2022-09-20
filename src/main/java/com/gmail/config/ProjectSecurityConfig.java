@@ -13,7 +13,7 @@ public class ProjectSecurityConfig {
     public SecurityFilterChain gmailUserConfig(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.authorizeHttpRequests(auth ->
-            auth.antMatchers("/register","/login").permitAll()
+            auth.antMatchers("/mail","/register","/login").permitAll()
                     .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred","/deleteMail","/logout")
             ).httpBasic(Customizer.withDefaults());
 
