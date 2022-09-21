@@ -37,17 +37,17 @@ public class User {
 	
 	
 //	private List<Mail> allMails;
-	
+
 //	@OneToMany
 //	@JsonIgnore
 //	@JoinColumn(name = "Inbox")
 //	private List<Mail> inbox;
-//	
+
 //	@OneToMany
 //	@JsonIgnore
 //	@JoinColumn(name = "Sent")
 //	private List<Mail> sent;
-	
+
 //	@OneToMany
 //	@JsonIgnore
 //	@JoinColumn(name = "Draft")

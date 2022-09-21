@@ -16,6 +16,7 @@ public class ProjectSecurityConfig {
 
         httpSecurity.authorizeHttpRequests(auth ->{
             try {
+
 				auth.antMatchers("/mail","/register","/login").permitAll()
 				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred","/deleteMail","/logout")
 				        .authenticated()
@@ -26,6 +27,8 @@ public class ProjectSecurityConfig {
 			}
         }
             ).httpBasic(Customizer.withDefaults());
+
+              
 
         return httpSecurity.build();
 

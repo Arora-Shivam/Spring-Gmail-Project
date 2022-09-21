@@ -21,5 +21,10 @@ public class UserController {
         return new ResponseEntity<>("user added", HttpStatus.ACCEPTED);
     }
 
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<String> deleteUser(){
+        return new ResponseEntity<>("user deleted",HttpStatus.ACCEPTED);
+    }
+
 
 }
