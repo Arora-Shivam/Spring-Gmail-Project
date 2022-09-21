@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/mail")
 public class UserController {
 
     @Autowired
@@ -19,7 +18,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> addUser(@RequestBody User user){
         boolean response = userService.addUser(user);
-        return new ResponseEntity<>("\"user added\"", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("user added", HttpStatus.ACCEPTED);
     }
 
 
