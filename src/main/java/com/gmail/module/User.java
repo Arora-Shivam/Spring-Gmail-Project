@@ -1,11 +1,13 @@
 package com.gmail.module;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,20 +35,19 @@ public class User {
 
 	private String password;
 
-	private String role;
+	private String role; // Admin , User
 	
 	
-//	private List<Mail> allMails;
+	@OneToMany
+	@JsonIgnore
+	@JoinColumn(name="recieved_mail")
+	private List<Mail> Inbox=new ArrayList<>();
 
-//	@OneToMany
-//	@JsonIgnore
-//	@JoinColumn(name = "Inbox")
-//	private List<Mail> inbox;
 
-//	@OneToMany
-//	@JsonIgnore
-//	@JoinColumn(name = "Sent")
-//	private List<Mail> sent;
+	@OneToMany
+	@JsonIgnore
+	@JoinColumn(name = "sent_mail")
+	private List<Mail> sent=new ArrayList<>();
 
 //	@OneToMany
 //	@JsonIgnore
