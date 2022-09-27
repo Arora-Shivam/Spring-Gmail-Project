@@ -16,13 +16,19 @@ public class ProjectSecurityConfig {
 
         httpSecurity.authorizeHttpRequests(auth ->{
             try {
-                auth.antMatchers("/mail","/register","/login").permitAll()
-                        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred","/deleteMail","/logout","/deleteUser").authenticated()
-                        .and().csrf().disable();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).httpBasic(Customizer.withDefaults());
+
+				auth.antMatchers("/mail","/register","/login").permitAll()
+				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred","/deleteMail","/logout")
+				        .authenticated()
+				        .and().csrf().disable();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+            ).httpBasic(Customizer.withDefaults());
+
+              
 
         return httpSecurity.build();
 
