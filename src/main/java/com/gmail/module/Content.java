@@ -18,7 +18,7 @@ public class Content {
 	
 	private String body;
 	
-	@OneToOne
-	private Attachment attachment;
+//	@OneToOne
+//	private Attachment attachment;
 	
 }
