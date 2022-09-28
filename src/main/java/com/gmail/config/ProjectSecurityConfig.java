@@ -18,7 +18,7 @@ public class ProjectSecurityConfig {
             try {
 
 				auth.antMatchers("/mail","/register","/login").permitAll()
-				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred","/deleteMail","/logout")
+				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred/**","/deleteMail","/logout","/starred/")
 				        .authenticated()
 				        .and().csrf().disable();
 			} catch (Exception e) {

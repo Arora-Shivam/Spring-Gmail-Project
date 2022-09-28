@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+
 public class UserController {
 
     @Autowired
@@ -39,28 +40,29 @@ public class UserController {
 	
     @PostMapping(value = "/starred/{mailId}")
 	public ResponseEntity<String> starredMail(@PathVariable("mailId") int mailId){
-		return null;
+		userService.starredMail(mailId);
+		return new ResponseEntity<>("Starred successfully", HttpStatus.ACCEPTED);
 	}
     
-    
-    @PostMapping(value = "/unstarred/{mailId}")
+    //Raj
+    @PostMapping(value = "/draft/{mailId}")
    	public ResponseEntity<String> unStarredMail(@PathVariable("mailId") int mailId){
    		return null;
    	}
-    
-    
-	
+
+
+	//Shivam
     @PostMapping(value = "/delete/{mailId}")
 	public ResponseEntity<String> deleteMail(@PathVariable("mailId") int mailId){
 		return null;
 	}
-    
+	//Shivam
     @PostMapping(value = "/restore/{mailId}")
 	public ResponseEntity<String> restoreMail(@PathVariable("mailId") int mailId){
 		return null;
 	}
-	
-	
+
+	//Raj
 	//Searching based on sender mail Id,Subject & body
     @GetMapping(value = "/search/{token}")
 	public ResponseEntity<List<Mail>> searchMail(@PathVariable("token") String email){

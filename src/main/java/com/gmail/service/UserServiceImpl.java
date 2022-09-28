@@ -5,7 +5,10 @@ import com.gmail.module.Mail;
 import com.gmail.module.User;
 import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
+import com.gmail.util.GetCurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,9 @@ public class UserServiceImpl implements UserService{
     
     @Autowired
     private MailDao mailDao;
+
+    @Autowired
+    private GetCurrentUser getCurrentUser;
 
     @Override
     public boolean addUser(User user) throws UserAlreadyExistException {
@@ -59,35 +65,49 @@ public class UserServiceImpl implements UserService{
 		System.out.println("After Mail Save");
 		
 		Optional<User> optSender=userDao.findByEmail(mail.getSender().getEmail());
-		
+
 		User sender=optSender.get();
-		
+
 		List<Mail> sentBox=sender.getSent();
-		
+
 		sentBox.add(mail);
-		
+
 		System.out.println("Before Sender Save");
 		
 		userDao.save(sender);
 		System.out.println("After Sender Save");
 		
-		List<User> recievers=mail.getRecievers();
-		
-		for(User reciever : recievers) {
-			
-			Optional<User> optReciever=userDao.findByEmail(reciever.getEmail());
-			
-			User recUser=optReciever.get();
-			
-			recUser.getInbox().add(mail);
-			System.out.println("Before Reciever Save");
-			userDao.save(recUser);
-			System.out.println("After Reciever Save");
-			
-		}
-		
+//		List<User> recievers=mail.getRecievers();
+//
+//		for(User reciever : recievers) {
+//
+//			Optional<User> optReciever=userDao.findByEmail(reciever.getEmail());
+//
+//			User recUser=optReciever.get();
+//
+//			recUser.getInbox().add(mail);
+//			System.out.println("Before Reciever Save");
+//			userDao.save(recUser);
+//			System.out.println("After Reciever Save");
+//
+//		}
+//
 		
 		
 		return true;
 	}
+
+    @Override
+    public boolean starredMail(int mailId) {
+
+        User currentUser = getCurrentUser.getCurrentUser();
+
+        Optional<Mail> mailOptional = mailDao.findById(mailId);
+
+        currentUser.getStarred().add(mailOptional.get());
+
+        userDao.save(currentUser);
+
+        return true;
+    }
 }

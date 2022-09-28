@@ -38,16 +38,21 @@ public class User {
 	private String role; // Admin , User
 	
 	
-	@OneToMany
-	@JsonIgnore
-	@JoinColumn(name="recieved_mail")
-	private List<Mail> Inbox=new ArrayList<>();
+//	@OneToMany
+//	@JsonIgnore
+//	@JoinColumn(name="recieved_mail")
+//	private List<Mail> Inbox=new ArrayList<>();
 
 
 	@OneToMany
 	@JsonIgnore
-	@JoinColumn(name = "sent_mail")
+	//@JoinColumn(name = "sent_mail")
 	private List<Mail> sent=new ArrayList<>();
+
+	@OneToMany
+	@JsonIgnore
+	//@JoinColumn(name = "starred_mail")
+	private List<Mail> starred = new ArrayList<>();
 
 //	@OneToMany
 //	@JsonIgnore

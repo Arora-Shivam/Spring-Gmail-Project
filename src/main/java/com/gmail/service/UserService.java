@@ -10,4 +10,6 @@ public interface UserService {
     public boolean addUser(User user) throws UserAlreadyExistException;
     
     public boolean sentMail(Mail mail);
+
+    public boolean starredMail(int mailId);
 }
