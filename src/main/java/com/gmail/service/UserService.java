@@ -12,4 +12,6 @@ public interface UserService {
     public boolean sentMail(Mail mail);
 
     public boolean starredMail(int mailId);
+
+    public boolean draftMail(Mail mail);
 }

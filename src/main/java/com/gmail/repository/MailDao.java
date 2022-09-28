@@ -14,4 +14,5 @@ public interface MailDao extends JpaRepository<Mail,Integer>{
 
     List<Mail> findByRecievers(User user);
 
+    List<Mail> findBySender(User user);
 }

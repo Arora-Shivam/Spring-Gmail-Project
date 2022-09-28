@@ -9,4 +9,10 @@ import java.util.List;
 public interface MailService {
 
     public List<Mail> inbox();
+
+    public List<Mail> sentBox();
+
+    public List<Mail> draftedMail();
+
+    public List<Mail> getAllMail();
 }

@@ -28,8 +28,10 @@ public class MailController {
 	//Raj
 	@GetMapping(value = "/sent")
 	public ResponseEntity<List<Mail>> sent(){
-		
-		return null;
+
+		List<Mail> sentList = mailService.sentBox();
+		return new ResponseEntity<>(sentList, HttpStatus.ACCEPTED);
+
 	}
 	
 	//Shivam
@@ -42,8 +44,10 @@ public class MailController {
 	//Raj
 	@GetMapping(value = "/draft")
 	public ResponseEntity<List<Mail>> draft(){
-		
-		return null;
+
+		List<Mail> draftList = mailService.draftedMail();
+
+		return new ResponseEntity<>(draftList, HttpStatus.ACCEPTED);
 	}
 
 	//Shivam
@@ -51,6 +55,14 @@ public class MailController {
 	public ResponseEntity<List<Mail>> trash(){
 		
 		return null;
+	}
+
+	@GetMapping(value = "/allMail")
+	public ResponseEntity<List<Mail>> allMail(){
+
+		List<Mail> allMailList = mailService.getAllMail();
+		return new ResponseEntity<>(allMailList, HttpStatus.ACCEPTED);
+
 	}
 	
 }

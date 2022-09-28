@@ -3,11 +3,13 @@ package com.gmail.service;
 import com.gmail.module.Mail;
 import com.gmail.module.User;
 import com.gmail.repository.MailDao;
+import com.gmail.repository.UserDao;
 import com.gmail.util.GetCurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MailServiceImpl implements MailService{
@@ -20,9 +22,49 @@ public class MailServiceImpl implements MailService{
 
     @Override
     public List<Mail> inbox() {
-        System.out.println("chekc");
+
         User user = getCurrentUser.getCurrentUser();
-        System.out.println("chekc");
+
         return mailDao.findByRecievers(user);
+    }
+
+    @Override
+    public List<Mail> sentBox() {
+
+        User user = getCurrentUser.getCurrentUser();
+
+        List<Mail> draftedMail = user.getDraft();
+
+
+        List<Mail>  mailSentByUser = user.getSent();
+
+        for(Mail mailDrafted : draftedMail){
+            mailSentByUser.remove(mailDrafted);
+        }
+
+        return mailSentByUser;
+    }
+
+    @Override
+    public List<Mail> draftedMail() {
+
+        User user = getCurrentUser.getCurrentUser();
+
+        return user.getDraft();
+    }
+
+    @Override
+    public List<Mail> getAllMail() {
+
+        User user = getCurrentUser.getCurrentUser();
+
+        Set<Mail> mailSet = new HashSet<>();
+
+        mailSet.addAll(user.getDraft());
+        mailSet.addAll(user.getSent());
+        mailSet.addAll(user.getStarred());
+        mailSet.addAll(inbox());
+
+        return new ArrayList<>(mailSet);
     }
 }

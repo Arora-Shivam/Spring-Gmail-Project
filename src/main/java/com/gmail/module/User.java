@@ -54,16 +54,12 @@ public class User {
 	//@JoinColumn(name = "starred_mail")
 	private List<Mail> starred = new ArrayList<>();
 
-//	@OneToMany
-//	@JsonIgnore
-//	@JoinColumn(name = "Draft")
-//	private List<Mail> draft;
-//
-//
-//	@OneToMany
-//	@JsonIgnore
-//	@JoinColumn(name = "Starred")
-//	private List<Mail> starred;
+	@OneToMany
+	@JsonIgnore
+	private List<Mail> draft = new ArrayList<>();;
+
+
+
 
 
 

@@ -45,9 +45,11 @@ public class UserController {
 	}
     
     //Raj
-    @PostMapping(value = "/draft/{mailId}")
-   	public ResponseEntity<String> unStarredMail(@PathVariable("mailId") int mailId){
-   		return null;
+    @PostMapping(value = "/draft")
+   	public ResponseEntity<String> draftMail(@RequestBody Mail mail){
+
+		userService.draftMail(mail);
+		return new ResponseEntity<>("Mail saved to draft",HttpStatus.ACCEPTED);
    	}
 
 

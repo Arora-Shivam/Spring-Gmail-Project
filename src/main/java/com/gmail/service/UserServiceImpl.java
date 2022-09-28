@@ -76,23 +76,7 @@ public class UserServiceImpl implements UserService{
 		
 		userDao.save(sender);
 		System.out.println("After Sender Save");
-		
-//		List<User> recievers=mail.getRecievers();
-//
-//		for(User reciever : recievers) {
-//
-//			Optional<User> optReciever=userDao.findByEmail(reciever.getEmail());
-//
-//			User recUser=optReciever.get();
-//
-//			recUser.getInbox().add(mail);
-//			System.out.println("Before Reciever Save");
-//			userDao.save(recUser);
-//			System.out.println("After Reciever Save");
-//
-//		}
-//
-		
+
 		
 		return true;
 	}
@@ -109,5 +93,20 @@ public class UserServiceImpl implements UserService{
         userDao.save(currentUser);
 
         return true;
+    }
+
+    @Override
+    public boolean draftMail(Mail mail) {
+        User currentUser = getCurrentUser.getCurrentUser();
+
+        mail.setTimeStamp(ZonedDateTime.now());
+        mailDao.save(mail);
+
+        currentUser.getDraft().add(mail);
+
+        userDao.save(currentUser);
+
+        return true;
+
     }
 }
