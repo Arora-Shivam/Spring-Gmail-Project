@@ -67,4 +67,20 @@ public class MailServiceImpl implements MailService{
 
         return new ArrayList<>(mailSet);
     }
+
+    @Override
+    public List<Mail> searchMail(String keyword) {
+
+        List<Mail> mailList = getAllMail();
+
+        List<Mail> resultMails = new ArrayList<>();
+
+        for(Mail res : mailList){
+            if(res.getBody().toLowerCase().contains(keyword.toLowerCase())){
+                resultMails.add(res);
+            }
+        }
+
+        return resultMails;
+    }
 }

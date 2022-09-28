@@ -15,4 +15,6 @@ public interface MailService {
     public List<Mail> draftedMail();
 
     public List<Mail> getAllMail();
+
+    public List<Mail> searchMail(String keyword);
 }

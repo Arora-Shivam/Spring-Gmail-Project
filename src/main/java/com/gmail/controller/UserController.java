@@ -3,6 +3,7 @@ package com.gmail.controller;
 import com.gmail.module.Mail;
 import com.gmail.module.User;
 import com.gmail.repository.UserDao;
+import com.gmail.service.MailService;
 import com.gmail.service.UserService;
 
 import java.util.List;
@@ -19,6 +20,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+	@Autowired
+	private MailService mailService;
 
     @PostMapping("/register")
     public ResponseEntity<String> addUser(@RequestBody User user){
@@ -68,8 +72,9 @@ public class UserController {
 	//Searching based on sender mail Id,Subject & body
     @GetMapping(value = "/search/{token}")
 	public ResponseEntity<List<Mail>> searchMail(@PathVariable("token") String email){
-	
-		return null;
+		List<Mail> mailList = mailService.searchMail(email);
+
+		return new ResponseEntity<>(mailList,HttpStatus.ACCEPTED);
 	}
 	
 	
