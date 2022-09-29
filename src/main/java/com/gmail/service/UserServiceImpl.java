@@ -2,6 +2,7 @@ package com.gmail.service;
 
 import com.gmail.exception.UserAlreadyExistException;
 import com.gmail.module.Mail;
+import com.gmail.module.MailDto;
 import com.gmail.module.User;
 import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
@@ -58,9 +59,26 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 
-	@Override
-	public boolean sentMail(Mail mail) {
-		
+    @Override
+    public boolean deleteUser() {
+        User currentUser = getCurrentUser.getCurrentUser();
+
+        userDao.delete(currentUser);
+
+        getCurrentUser.logout();
+
+        return true;
+    }
+
+    @Override
+	public boolean sentMail(MailDto mailDto) {
+
+        Mail mail = new Mail();
+
+
+        mail.setSender(getCurrentUser.getCurrentUser());
+        mail.setRecievers(mailDto.getRecievers());
+        mail.setBody(mailDto.getBody());
 		mail.setTimeStamp(ZonedDateTime.now());
 		
 		System.out.println("Before Mail Save");

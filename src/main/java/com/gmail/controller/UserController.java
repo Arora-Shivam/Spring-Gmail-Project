@@ -1,6 +1,7 @@
 package com.gmail.controller;
 
 import com.gmail.module.Mail;
+import com.gmail.module.MailDto;
 import com.gmail.module.User;
 import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
@@ -37,13 +38,14 @@ public class UserController {
 
     @DeleteMapping("/deleteUser")
     public ResponseEntity<String> deleteUser(){
-        return new ResponseEntity<>("user deleted",HttpStatus.ACCEPTED);
+		boolean response = userService.deleteUser();
+		return new ResponseEntity<>("user deleted",HttpStatus.ACCEPTED);
     }
     
     @PostMapping(value = "/send")
-    public ResponseEntity<String> sendMail(@RequestBody Mail mail){
+    public ResponseEntity<String> sendMail(@RequestBody MailDto mailDto){
 		
-    	userService.sentMail(mail);
+    	userService.sentMail(mailDto);
     	return new ResponseEntity<String>("Mail Sent",HttpStatus.OK);
 	}
 	

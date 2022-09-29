@@ -42,4 +42,8 @@ public class GetCurrentUser {
 
             return currentUser.get();
     }
+
+    public void logout() {
+        SecurityContextHolder.clearContext();
+    }
 }
