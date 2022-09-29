@@ -14,4 +14,5 @@ public interface UserDao extends JpaRepository<User,String> {
 
     List<Mail> findByDraft(User user);
     
+    List<User> findByTrashMails(User user);
 }

@@ -2,11 +2,13 @@ package com.gmail.controller;
 
 import com.gmail.module.Mail;
 import com.gmail.module.User;
+import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
 import com.gmail.service.MailService;
 import com.gmail.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,9 @@ public class UserController {
 
 	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private MailDao mailDao;
 
     @PostMapping("/register")
     public ResponseEntity<String> addUser(@RequestBody User user){
@@ -58,14 +63,38 @@ public class UserController {
 
 
 	//Shivam
-    @PostMapping(value = "/delete/{mailId}")
+    @PostMapping(value = "/trash/{mailId}")
 	public ResponseEntity<String> deleteMail(@PathVariable("mailId") int mailId){
-		return null;
+    	Optional<Mail> mail=mailDao.findById(mailId);
+    	
+    	if(mail.isPresent()) {
+    		if(userService.deleteMail(mail.get()))
+    			return new ResponseEntity<String>("Mail Deleted Successfully",HttpStatus.OK);
+    		else {
+    			return new ResponseEntity<String>("Mail Doesn't Exist",HttpStatus.BAD_REQUEST);
+    		}
+    	}
+    	else {
+    		return null;
+    	}
+    	
+
 	}
 	//Shivam
     @PostMapping(value = "/restore/{mailId}")
 	public ResponseEntity<String> restoreMail(@PathVariable("mailId") int mailId){
-		return null;
+    	Optional<Mail> mail=mailDao.findById(mailId);
+    	
+    	if(mail.isPresent()) {
+    		
+    		if(userService.restoreMail(mail.get()))
+    			return new ResponseEntity<String>("Mail Restored Successfully",HttpStatus.OK);
+    		else 
+    			return new ResponseEntity<String>("Mail Doesn't Exist in Trash Box",HttpStatus.BAD_REQUEST);
+    	}
+    	else {
+    		return null;
+    	}
 	}
 
 	//Raj

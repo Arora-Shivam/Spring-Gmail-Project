@@ -30,6 +30,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private GetCurrentUser getCurrentUser;
+    
+    @Autowired
+    private MailService mailService;
 
     @Override
     public boolean addUser(User user) throws UserAlreadyExistException {
@@ -109,6 +112,43 @@ public class UserServiceImpl implements UserService{
         return true;
 
     }
+
+	@Override
+	public boolean deleteMail(Mail mail) {		
+		
+		User currentLogenInUser=getCurrentUser.getCurrentUser();
+		
+		//If the current user has sent and recieved mail then only we can delete it
+		if(mailService.getAllMail().contains(mail)) {
+			currentLogenInUser.getTrashMails().add(mail);
+			userDao.save(currentLogenInUser);
+			return true;
+		}	
+		else{
+			return false;
+		}
+		
+	}
+
+	@Override
+	public boolean restoreMail(Mail mail) {
+		// TODO Auto-generated method stub
+		User currentLogenInUser=getCurrentUser.getCurrentUser();
+		
+		//If mail exist in trash box only then we can restore
+		if(mailService.getDeletedMails().contains(mail)) {
+			currentLogenInUser.getTrashMails().remove(mail);
+		
+			userDao.save(currentLogenInUser);
+		
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+    
+    
 
 
 }

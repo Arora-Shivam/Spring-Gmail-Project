@@ -16,6 +16,8 @@ public interface UserService {
     public boolean starredMail(int mailId);
 
     public boolean draftMail(Mail mail);
-
-
+    
+    public boolean deleteMail(Mail mail);
+    
+    public boolean restoreMail(Mail mail);
 }

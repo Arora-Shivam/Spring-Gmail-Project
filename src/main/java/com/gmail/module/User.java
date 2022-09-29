@@ -58,7 +58,9 @@ public class User {
 	@JsonIgnore
 	private List<Mail> draft = new ArrayList<>();;
 
-
+	@OneToMany
+	@JsonIgnore
+	private List<Mail> trashMails= new ArrayList<>();
 
 
 
