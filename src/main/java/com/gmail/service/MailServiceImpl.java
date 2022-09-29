@@ -64,7 +64,8 @@ public class MailServiceImpl implements MailService{
         mailSet.addAll(user.getSent());
         mailSet.addAll(user.getStarred());
         mailSet.addAll(inbox());
-
+        mailSet.removeAll(getDeletedMails());
+ 
         return new ArrayList<>(mailSet);
     }
 
@@ -74,7 +75,7 @@ public class MailServiceImpl implements MailService{
         List<Mail> mailList = getAllMail();
 
         Set<Mail> resultMails = new HashSet<>();
-
+        
         for(Mail res : mailList){
             if(res.getBody().toLowerCase().contains(keyword.toLowerCase()) ||
                     res.getSender().getEmail().toLowerCase().contains(keyword.toLowerCase())){
@@ -95,4 +96,26 @@ public class MailServiceImpl implements MailService{
 
         return new ArrayList<>(resultMails);
     }
+
+	@Override
+	public List<Mail> getDeletedMails() {
+		// TODO Auto-generated method stub
+		
+		User currentLogedInUser=getCurrentUser.getCurrentUser();
+		
+		List<Mail> deletedMails=currentLogedInUser.getTrashMails();
+		
+		return deletedMails;
+	}
+
+	@Override
+	public List<Mail> getStarredMails() {
+		// TODO Auto-generated method stub
+		
+		User currentLogedInUser=getCurrentUser.getCurrentUser();
+		
+		List<Mail> starredMails=currentLogedInUser.getStarred();
+		
+		return starredMails;
+	}
 }

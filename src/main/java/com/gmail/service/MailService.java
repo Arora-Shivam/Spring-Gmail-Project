@@ -17,4 +17,8 @@ public interface MailService {
     public List<Mail> getAllMail();
 
     public List<Mail> searchMail(String keyword);
+    
+    public List<Mail> getDeletedMails();
+    
+    public List<Mail> getStarredMails();
 }

@@ -37,8 +37,10 @@ public class MailController {
 	//Shivam
 	@GetMapping(value = "/starred")
 	public ResponseEntity<List<Mail>> starred(){
+		List<Mail> starredMails= mailService.getStarredMails();
 		
-		return null;
+		return new ResponseEntity<List<Mail>>(starredMails,HttpStatus.OK);
+	
 	}
 
 	//Raj
@@ -54,7 +56,9 @@ public class MailController {
 	@GetMapping(value = "/trash")
 	public ResponseEntity<List<Mail>> trash(){
 		
-		return null;
+		List<Mail> trashMails= mailService.getDeletedMails();
+		
+		return new ResponseEntity<List<Mail>>(trashMails,HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/allMail")
