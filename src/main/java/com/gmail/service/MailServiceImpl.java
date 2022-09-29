@@ -73,14 +73,24 @@ public class MailServiceImpl implements MailService{
 
         List<Mail> mailList = getAllMail();
 
-        List<Mail> resultMails = new ArrayList<>();
+        Set<Mail> resultMails = new HashSet<>();
 
         for(Mail res : mailList){
-            if(res.getBody().toLowerCase().contains(keyword.toLowerCase())){
+            if(res.getBody().toLowerCase().contains(keyword.toLowerCase()) ||
+                    res.getSender().getEmail().toLowerCase().contains(keyword.toLowerCase())){
                 resultMails.add(res);
             }
         }
 
-        return resultMails;
+        for(Mail res : mailList){
+            List<User> reciever = res.getRecievers();
+            for(User user : reciever){
+                if(user.getEmail().toLowerCase().contains(keyword.toLowerCase())){
+                    resultMails.add(res);
+                }
+            }
+        }
+
+        return new ArrayList<>(resultMails);
     }
 }
