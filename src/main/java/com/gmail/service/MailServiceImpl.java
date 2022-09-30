@@ -1,5 +1,6 @@
 package com.gmail.service;
 
+import com.gmail.exception.NoMailFound;
 import com.gmail.module.Mail;
 import com.gmail.module.User;
 import com.gmail.repository.MailDao;
@@ -25,7 +26,11 @@ public class MailServiceImpl implements MailService{
 
         User user = getCurrentUser.getCurrentUser();
 
-        return mailDao.findByRecievers(user);
+        if(mailDao.findByRecievers(user).size() != 0){
+            return mailDao.findByRecievers(user);
+        }
+
+        throw new NoMailFound("Your Inbox is Empty");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.gmail.exceptionhandler;
 
 import com.gmail.exception.ErrorDetails;
+import com.gmail.exception.NoMailFound;
 import com.gmail.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +17,18 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ExceptionalHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorDetails> UserNotFound(UserNotFoundException userNotFoundException, WebRequest request){
+    @ExceptionHandler(NoMailFound.class)
+    public ResponseEntity<ErrorDetails> noMailFound(NoMailFound noMailFound, WebRequest request){
 
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                userNotFoundException.getMessage(),
-                request.getDescription(false)
+                HttpStatus.NO_CONTENT.value(),
+                request.getDescription(false),
+                noMailFound.getMessage()
         );
 
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.NO_CONTENT);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
