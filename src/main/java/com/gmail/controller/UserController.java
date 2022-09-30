@@ -30,13 +30,13 @@ public class UserController {
 	@Autowired
 	private MailDao mailDao;
 
-    @PostMapping("/register")
+    @PostMapping("/user")
     public ResponseEntity<String> addUser(@RequestBody User user){
         boolean response = userService.addUser(user);
         return new ResponseEntity<>("user added", HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/deleteUser")
+    @DeleteMapping("/user")
     public ResponseEntity<String> deleteUser(){
 		boolean response = userService.deleteUser();
 		return new ResponseEntity<>("user deleted",HttpStatus.ACCEPTED);
