@@ -47,7 +47,11 @@ public class MailServiceImpl implements MailService{
             mailSentByUser.remove(mailDrafted);
         }
 
-        return mailSentByUser;
+        if(mailSentByUser.size() != 0){
+            return mailSentByUser;
+        }
+
+        throw new NoMailFound("Your Sent Box is Empty");
     }
 
     @Override
@@ -55,7 +59,12 @@ public class MailServiceImpl implements MailService{
 
         User user = getCurrentUser.getCurrentUser();
 
-        return user.getDraft();
+
+        if(user.getDraft().size() != 0){
+            return user.getDraft();
+        }
+
+        throw new NoMailFound("Your Draft is Empty");
     }
 
     @Override
@@ -71,7 +80,15 @@ public class MailServiceImpl implements MailService{
         mailSet.addAll(inbox());
         mailSet.removeAll(getDeletedMails());
  
-        return new ArrayList<>(mailSet);
+        List<Mail> allMail = new ArrayList<>(mailSet);
+
+        if(allMail.size() != 0){
+            return allMail;
+        }
+
+        throw new NoMailFound("You Dont Have Any Mails");
+
+
     }
 
     @Override
@@ -99,7 +116,13 @@ public class MailServiceImpl implements MailService{
 
         }
 
-        return new ArrayList<>(resultMails);
+        List<Mail> allMail = new ArrayList<>(resultMails);
+
+        if(allMail.size() != 0){
+            return allMail;
+        }
+
+        throw new NoMailFound("You Dont Have Any Mails");
     }
 
 	@Override
