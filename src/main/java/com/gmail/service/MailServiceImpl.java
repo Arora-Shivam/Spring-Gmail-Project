@@ -7,6 +7,7 @@ import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
 import com.gmail.util.GetCurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -25,33 +26,43 @@ public class MailServiceImpl implements MailService{
     public List<Mail> inbox() {
 
         User user = getCurrentUser.getCurrentUser();
-
-        if(mailDao.findByRecievers(user).size() != 0){
-            return mailDao.findByRecievers(user);
+        
+        if(user==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
-
-        throw new NoMailFound("Your Inbox is Empty");
+        else {
+	        if(mailDao.findByRecievers(user).size() != 0){
+	            return mailDao.findByRecievers(user);
+	        }
+	
+	        throw new NoMailFound("Your Inbox is Empty");
+        }
     }
 
     @Override
     public List<Mail> sentBox() {
 
         User user = getCurrentUser.getCurrentUser();
-
-        List<Mail> draftedMail = user.getDraft();
-
-
-        List<Mail>  mailSentByUser = user.getSent();
-
-        for(Mail mailDrafted : draftedMail){
-            mailSentByUser.remove(mailDrafted);
+        
+        if(user==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
-
-        if(mailSentByUser.size() != 0){
-            return mailSentByUser;
+        else {
+	        List<Mail> draftedMail = user.getDraft();
+	
+	
+	        List<Mail>  mailSentByUser = user.getSent();
+	
+	        for(Mail mailDrafted : draftedMail){
+	            mailSentByUser.remove(mailDrafted);
+	        }
+	
+	        if(mailSentByUser.size() != 0){
+	            return mailSentByUser;
+	        }
+	
+	        throw new NoMailFound("Your Sent Box is Empty");
         }
-
-        throw new NoMailFound("Your Sent Box is Empty");
     }
 
     @Override
@@ -59,34 +70,43 @@ public class MailServiceImpl implements MailService{
 
         User user = getCurrentUser.getCurrentUser();
 
-
-        if(user.getDraft().size() != 0){
-            return user.getDraft();
+        if(user==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
-
-        throw new NoMailFound("Your Draft is Empty");
+        else {
+	        if(user.getDraft().size() != 0){
+	            return user.getDraft();
+	        }
+	
+	        throw new NoMailFound("Your Draft is Empty");
+        }
     }
 
     @Override
     public List<Mail> getAllMail() {
 
         User user = getCurrentUser.getCurrentUser();
-
-        Set<Mail> mailSet = new HashSet<>();
-
-        mailSet.addAll(user.getDraft());
-        mailSet.addAll(user.getSent());
-        mailSet.addAll(user.getStarred());
-        mailSet.addAll(inbox());
-        mailSet.removeAll(getDeletedMails());
- 
-        List<Mail> allMail = new ArrayList<>(mailSet);
-
-        if(allMail.size() != 0){
-            return allMail;
+        
+        if(user==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
-
-        throw new NoMailFound("You Dont Have Any Mails");
+        else {
+	        Set<Mail> mailSet = new HashSet<>();
+	
+	        mailSet.addAll(user.getDraft());
+	        mailSet.addAll(user.getSent());
+	        mailSet.addAll(user.getStarred());
+	        mailSet.addAll(inbox());
+	        mailSet.removeAll(getDeletedMails());
+	 
+	        List<Mail> allMail = new ArrayList<>(mailSet);
+	
+	        if(allMail.size() != 0){
+	            return allMail;
+	        }
+	
+	        throw new NoMailFound("You Dont Have Any Mails");
+        }
 
 
     }
@@ -131,9 +151,19 @@ public class MailServiceImpl implements MailService{
 		
 		User currentLogedInUser=getCurrentUser.getCurrentUser();
 		
-		List<Mail> deletedMails=currentLogedInUser.getTrashMails();
-		
-		return deletedMails;
+		if(currentLogedInUser==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+        }
+        else {
+			List<Mail> deletedMails=currentLogedInUser.getTrashMails();
+			
+			if(deletedMails.size()==0) {
+				throw new NoMailFound("Trash Box is Empty");
+			}
+			else {
+				return deletedMails;
+			}
+        }
 	}
 
 	@Override
@@ -141,9 +171,17 @@ public class MailServiceImpl implements MailService{
 		// TODO Auto-generated method stub
 		
 		User currentLogedInUser=getCurrentUser.getCurrentUser();
-		
+		if(currentLogedInUser==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+        }
+        else {
 		List<Mail> starredMails=currentLogedInUser.getStarred();
-		
-		return starredMails;
+			if(starredMails.size()==0) {
+				throw new NoMailFound("Trash Box is Empty");
+			}
+			else {
+				return starredMails;
+			}
+        }
 	}
 }
