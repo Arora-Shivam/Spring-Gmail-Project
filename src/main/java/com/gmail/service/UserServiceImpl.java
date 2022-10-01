@@ -1,5 +1,6 @@
 package com.gmail.service;
 
+import com.gmail.exception.NoMailFound;
 import com.gmail.exception.UserAlreadyExistException;
 import com.gmail.module.Mail;
 import com.gmail.module.MailDto;
@@ -10,6 +11,7 @@ import com.gmail.util.GetCurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService{
         Optional<User> optionalUser = userDao.findByEmail(user.getEmail());
 
         if(optionalUser.isPresent()){
-            throw new UserAlreadyExistException("UserName already exist");
+            throw new UserAlreadyExistException("Email already exist with the id "+ user.getEmail());
         }else {
             User userWithEncoder = new User();
 
@@ -62,12 +64,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public boolean deleteUser() {
         User currentUser = getCurrentUser.getCurrentUser();
-
-        userDao.delete(currentUser);
-
-        getCurrentUser.logout();
-
-        return true;
+        if(currentUser==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+        }
+        else {
+	        userDao.delete(currentUser);
+	
+	        getCurrentUser.logout();
+	
+	        return true;
+        }
     }
 
     @Override
@@ -104,30 +110,45 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean starredMail(int mailId) {
-
+    	
+    	
         User currentUser = getCurrentUser.getCurrentUser();
-
-        Optional<Mail> mailOptional = mailDao.findById(mailId);
-
-        currentUser.getStarred().add(mailOptional.get());
-
-        userDao.save(currentUser);
-
-        return true;
+        if(currentUser==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+        }
+        else {
+	        Optional<Mail> mailOptional = mailDao.findById(mailId);
+	        if(mailOptional.isPresent()) {
+		        currentUser.getStarred().add(mailOptional.get());
+		
+		        userDao.save(currentUser);
+		
+		        return true;
+	        }
+	        else {
+	        	throw new NoMailFound("Mail Does not Exist");
+	        }
+        }
     }
 
     @Override
     public boolean draftMail(Mail mail) {
-        User currentUser = getCurrentUser.getCurrentUser();
-
-        mail.setTimeStamp(ZonedDateTime.now());
-        mailDao.save(mail);
-
-        currentUser.getDraft().add(mail);
-
-        userDao.save(currentUser);
-
-        return true;
+        
+    	User currentUser = getCurrentUser.getCurrentUser();
+        
+        if(currentUser==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+        }
+        else {
+	        mail.setTimeStamp(ZonedDateTime.now());
+	        mailDao.save(mail);
+	
+	        currentUser.getDraft().add(mail);
+	
+	        userDao.save(currentUser);
+	
+	        return true;
+        }
 
     }
 
@@ -136,15 +157,21 @@ public class UserServiceImpl implements UserService{
 		
 		User currentLogenInUser=getCurrentUser.getCurrentUser();
 		
-		//If the current user has sent and recieved mail then only we can delete it
-		if(mailService.getAllMail().contains(mail)) {
-			currentLogenInUser.getTrashMails().add(mail);
-			userDao.save(currentLogenInUser);
-			return true;
-		}	
-		else{
-			return false;
-		}
+		
+		if(currentLogenInUser==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+        }
+        else {
+        	//If the current user has sent and recieved mail then only we can delete it
+			if(mailService.getAllMail().contains(mail)) {
+				currentLogenInUser.getTrashMails().add(mail);
+				userDao.save(currentLogenInUser);
+				return true;
+			}	
+			else{
+				return false;
+			}
+        }
 		
 	}
 
@@ -152,18 +179,22 @@ public class UserServiceImpl implements UserService{
 	public boolean restoreMail(Mail mail) {
 		// TODO Auto-generated method stub
 		User currentLogenInUser=getCurrentUser.getCurrentUser();
-		
-		//If mail exist in trash box only then we can restore
-		if(mailService.getDeletedMails().contains(mail)) {
-			currentLogenInUser.getTrashMails().remove(mail);
-		
-			userDao.save(currentLogenInUser);
-		
-			return true;
-		}
-		else {
-			return false;
-		}
+		if(currentLogenInUser==null) {
+        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+        }
+        else {
+			//If mail exist in trash box only then we can restore
+			if(mailService.getDeletedMails().contains(mail)) {
+				currentLogenInUser.getTrashMails().remove(mail);
+			
+				userDao.save(currentLogenInUser);
+			
+				return true;
+			}
+			else {
+				return false;
+			}
+        }
 	}
     
     

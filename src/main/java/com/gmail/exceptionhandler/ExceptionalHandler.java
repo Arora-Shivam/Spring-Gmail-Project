@@ -2,9 +2,11 @@ package com.gmail.exceptionhandler;
 
 import com.gmail.exception.ErrorDetails;
 import com.gmail.exception.NoMailFound;
+import com.gmail.exception.UserAlreadyExistException;
 import com.gmail.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -95,6 +97,22 @@ public class ExceptionalHandler {
 
         return new ResponseEntity<ErrorDetails>(errorDetail, HttpStatus.METHOD_NOT_ALLOWED);
     }
-
+    
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorDetails> userNotFound(UserNotFoundException userNotFoundException,WebRequest webRequest){
+    	
+    	ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), HttpStatus.NOT_FOUND.value() ,"Not Found" ,userNotFoundException.getMessage());
+    	
+    	return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.NOT_FOUND);
+    	
+    }
+    
+    
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<ErrorDetails> userAlreadyExistException(UserAlreadyExistException userAlreadyExistException,WebRequest webRequest){
+    	
+    	ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), HttpStatus.CONFLICT.value() ,"User Already Existed with this Email id" ,userAlreadyExistException.getMessage());
+    	return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.CONFLICT);
+    }
 }
 
