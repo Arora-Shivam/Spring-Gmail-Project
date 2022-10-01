@@ -8,7 +8,8 @@ import java.util.List;
 
 @Data
 public class MailDto {
-
+	
+	//Should we keep List<String> ?
     private List<User> recievers;
 
     private String body;

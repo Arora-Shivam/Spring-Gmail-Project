@@ -81,31 +81,35 @@ public class UserServiceImpl implements UserService{
 
         Mail mail = new Mail();
 
-
-        mail.setSender(getCurrentUser.getCurrentUser());
-        mail.setRecievers(mailDto.getRecievers());
-        mail.setBody(mailDto.getBody());
-		mail.setTimeStamp(ZonedDateTime.now());
-		
-		System.out.println("Before Mail Save");
-		mailDao.save(mail);
-		System.out.println("After Mail Save");
-		
-		Optional<User> optSender=userDao.findByEmail(mail.getSender().getEmail());
-
-		User sender=optSender.get();
-
-		List<Mail> sentBox=sender.getSent();
-
-		sentBox.add(mail);
-
-		System.out.println("Before Sender Save");
-		
-		userDao.save(sender);
-		System.out.println("After Sender Save");
-
-		
-		return true;
+        User currentSender =getCurrentUser.getCurrentUser();
+        
+       
+	        mail.setSender(currentSender);
+	        mail.setRecievers(mailDto.getRecievers());
+	        mail.setBody(mailDto.getBody());
+			mail.setTimeStamp(ZonedDateTime.now());
+			
+			System.out.println("Before Mail Save");
+			System.out.println(mailDto.getRecievers());
+			mailDao.save(mail);
+			System.out.println("After Mail Save");
+			
+			Optional<User> optSender=userDao.findByEmail(mail.getSender().getEmail());
+	
+			User sender=optSender.get();
+	
+			List<Mail> sentBox=sender.getSent();
+	
+			sentBox.add(mail);
+	
+			System.out.println("Before Sender Save");
+			
+			userDao.save(sender);
+			System.out.println("After Sender Save");
+	
+			
+			return true;
+        
 	}
 
     @Override

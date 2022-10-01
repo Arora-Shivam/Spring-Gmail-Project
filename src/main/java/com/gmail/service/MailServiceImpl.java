@@ -1,6 +1,7 @@
 package com.gmail.service;
 
 import com.gmail.exception.NoMailFound;
+import com.gmail.exception.UserNotFoundException;
 import com.gmail.module.Mail;
 import com.gmail.module.User;
 import com.gmail.repository.MailDao;
@@ -175,13 +176,16 @@ public class MailServiceImpl implements MailService{
         	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
         else {
-		List<Mail> starredMails=currentLogedInUser.getStarred();
-			if(starredMails.size()==0) {
-				throw new NoMailFound("Trash Box is Empty");
-			}
-			else {
-				return starredMails;
-			}
-        }
+	        	
+					List<Mail> starredMails=currentLogedInUser.getStarred();
+						if(starredMails.size()==0) {
+							throw new NoMailFound("Trash Box is Empty");
+						}
+						else {
+							return starredMails;
+						}
+			        
+		      
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.gmail.config;
 
+import com.gmail.exception.UserNotFoundException;
 import com.gmail.module.User;
 import com.gmail.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class GmailUserDetailService implements UserDetailsService {
             return new SecurityUser(admin.get());
         }
 
-        throw  new UsernameNotFoundException("User Not Found");
+        throw  new UserNotFoundException("User Not Found");
     }
 
 

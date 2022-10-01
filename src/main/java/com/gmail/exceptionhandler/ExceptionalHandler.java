@@ -91,7 +91,7 @@ public class ExceptionalHandler {
         ErrorDetails errorDetail = new ErrorDetails(
                 LocalDateTime.now(),
                 HttpStatus.METHOD_NOT_ALLOWED.value(),
-                exception.getMessage(),
+                "BAD REQUEST",
                 request.getDescription(false)
         );
 
@@ -114,5 +114,7 @@ public class ExceptionalHandler {
     	ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), HttpStatus.CONFLICT.value() ,"User Already Existed with this Email id" ,userAlreadyExistException.getMessage());
     	return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.CONFLICT);
     }
+    
+    
 }
 
