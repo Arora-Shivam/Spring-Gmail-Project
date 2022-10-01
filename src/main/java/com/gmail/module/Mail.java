@@ -43,6 +43,7 @@ public class Mail {
 			)
 	private User sender;
 	
+
 	@ManyToMany
 	@JsonIgnoreProperties(value = {
 			"firstName",

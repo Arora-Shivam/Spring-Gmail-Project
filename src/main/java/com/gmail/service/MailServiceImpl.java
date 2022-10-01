@@ -159,7 +159,7 @@ public class MailServiceImpl implements MailService{
 			List<Mail> deletedMails=currentLogedInUser.getTrashMails();
 			
 			if(deletedMails.size()==0) {
-				throw new NoMailFound("Trash Box is Empty");
+				throw new NoMailFound("You have not Deleted any mails yet");
 			}
 			else {
 				return deletedMails;
@@ -179,7 +179,7 @@ public class MailServiceImpl implements MailService{
 	        	
 					List<Mail> starredMails=currentLogedInUser.getStarred();
 						if(starredMails.size()==0) {
-							throw new NoMailFound("Trash Box is Empty");
+							throw new NoMailFound("You have not Starred any mails yet");
 						}
 						else {
 							return starredMails;

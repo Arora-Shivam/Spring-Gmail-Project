@@ -2,6 +2,7 @@ package com.gmail.service;
 
 import com.gmail.exception.NoMailFound;
 import com.gmail.exception.UserAlreadyExistException;
+import com.gmail.exception.UserNotFoundException;
 import com.gmail.module.Mail;
 import com.gmail.module.MailDto;
 import com.gmail.module.User;
@@ -74,6 +75,7 @@ public class UserServiceImpl implements UserService{
 	
 	        return true;
         }
+        
     }
 
     @Override
@@ -83,33 +85,40 @@ public class UserServiceImpl implements UserService{
 
         User currentSender =getCurrentUser.getCurrentUser();
         
-       
-	        mail.setSender(currentSender);
-	        mail.setRecievers(mailDto.getRecievers());
-	        mail.setBody(mailDto.getBody());
-			mail.setTimeStamp(ZonedDateTime.now());
+       if(currentSender==null) {
+    	   throw new UserNotFoundException("User session expired, Please Login Again");
+       }
+       else {
+	        
+	        	mail.setSender(currentSender);
+		        
+		        mail.setRecievers(mailDto.getRecievers());
+		        mail.setBody(mailDto.getBody());
+				mail.setTimeStamp(ZonedDateTime.now());
+				
+				System.out.println("Before Mail Save");
+				System.out.println(mailDto.getRecievers());
+				mailDao.save(mail);
+				System.out.println("After Mail Save");
+				
+				Optional<User> optSender=userDao.findByEmail(mail.getSender().getEmail());
+		
+				User sender=optSender.get();
+		
+				List<Mail> sentBox=sender.getSent();
+		
+				sentBox.add(mail);
+		
+				System.out.println("Before Sender Save");
+				
+				userDao.save(sender);
+				System.out.println("After Sender Save");
+		
+				
+				return true;
 			
-			System.out.println("Before Mail Save");
-			System.out.println(mailDto.getRecievers());
-			mailDao.save(mail);
-			System.out.println("After Mail Save");
-			
-			Optional<User> optSender=userDao.findByEmail(mail.getSender().getEmail());
-	
-			User sender=optSender.get();
-	
-			List<Mail> sentBox=sender.getSent();
-	
-			sentBox.add(mail);
-	
-			System.out.println("Before Sender Save");
-			
-			userDao.save(sender);
-			System.out.println("After Sender Save");
-	
-			
-			return true;
-        
+    	    
+       }
 	}
 
     @Override
@@ -173,7 +182,7 @@ public class UserServiceImpl implements UserService{
 				return true;
 			}	
 			else{
-				return false;
+				throw new NoMailFound("Mail Does not Exist");
 			}
         }
 		
@@ -196,7 +205,7 @@ public class UserServiceImpl implements UserService{
 				return true;
 			}
 			else {
-				return false;
+				throw new NoMailFound("Mail Does not Exist in Trsh Box");
 			}
         }
 	}

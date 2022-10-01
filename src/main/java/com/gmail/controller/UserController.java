@@ -1,5 +1,6 @@
 package com.gmail.controller;
 
+import com.gmail.exception.NoMailFound;
 import com.gmail.module.Mail;
 import com.gmail.module.MailDto;
 import com.gmail.module.User;
@@ -7,6 +8,8 @@ import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
 import com.gmail.service.MailService;
 import com.gmail.service.UserService;
+
+import net.bytebuddy.implementation.bytecode.Throw;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,8 +54,9 @@ public class UserController {
 	
     @PostMapping(value = "/starred/{mailId}")
 	public ResponseEntity<String> starredMail(@PathVariable("mailId") int mailId){
-		userService.starredMail(mailId);
-		return new ResponseEntity<>("Starred successfully", HttpStatus.ACCEPTED);
+			
+				userService.starredMail(mailId);
+				return new ResponseEntity<>("Starred successfully", HttpStatus.ACCEPTED);
 	}
     
     //Raj
@@ -70,14 +74,12 @@ public class UserController {
     	Optional<Mail> mail=mailDao.findById(mailId);
     	
     	if(mail.isPresent()) {
-    		if(userService.deleteMail(mail.get()))
+    		
     			return new ResponseEntity<String>("Mail Deleted Successfully",HttpStatus.OK);
-    		else {
-    			return new ResponseEntity<String>("Mail Doesn't Exist",HttpStatus.BAD_REQUEST);
-    		}
+    		
     	}
     	else {
-    		return null;
+    	       throw new NoMailFound("No Mail Found");
     	}
     	
 
@@ -89,13 +91,12 @@ public class UserController {
     	
     	if(mail.isPresent()) {
     		
-    		if(userService.restoreMail(mail.get()))
-    			return new ResponseEntity<String>("Mail Restored Successfully",HttpStatus.OK);
-    		else 
-    			return new ResponseEntity<String>("Mail Doesn't Exist in Trash Box",HttpStatus.BAD_REQUEST);
+    		userService.restoreMail(mail.get());
+    		return new ResponseEntity<String>("Mail Restored Successfully",HttpStatus.OK);
+    		
     	}
     	else {
-    		return null;
+    		throw new NoMailFound("No Mail Found");
     	}
 	}
 

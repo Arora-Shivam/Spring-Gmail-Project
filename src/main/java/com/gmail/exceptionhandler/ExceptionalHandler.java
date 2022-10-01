@@ -25,13 +25,13 @@ public class ExceptionalHandler {
 
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
-                HttpStatus.NO_CONTENT.value(),
-                request.getDescription(false),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
                 noMailFound.getMessage()
         );
 
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
