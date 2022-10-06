@@ -1,14 +1,30 @@
 package com.gmail.module;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
 
-public  class  Attachment {
+@Data
+@Entity
+@NoArgsConstructor
+public class Attachment {
 
-	private int id;
-//	
+    @Id
+    @GeneratedValue ( generator = "uuid" )
+    @GenericGenerator ( name = "uuid", strategy = "uuid2" )
+    private String id;
+    private String FileName;
+    private String FileType;
+    @Lob
+    private byte[] data;
+
+    public Attachment ( String FileName , String FileType , byte[] data ) {
+        this.FileName = FileName;
+        this.FileType = FileType;
+        this.data = data;
+    }
 //	@Embedded
 //	private Video video;
 //	
