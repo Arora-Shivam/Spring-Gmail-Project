@@ -1,5 +1,3 @@
---Mobile Number Validation While registering
 --Unstar mail
---Mail Draft(Change request body to MailDto)
---Deleting the mail permanently **
+--Deleting the mail permanently -- partially completed
 --DELETING THE USER permanently

@@ -174,7 +174,7 @@ public class MailServiceImpl implements MailService{
 			List<Mail> deletedMails=currentLogedInUser.getTrashMails();
 			
 			if(deletedMails.size()==0) {
-				throw new NoMailFound("You have not Deleted any mails yet");
+				throw new NoMailFound("Trash is empty");
 			}
 			else {
 				return deletedMails;
@@ -206,4 +206,6 @@ public class MailServiceImpl implements MailService{
 		      
 		}
 	}
+
+
 }

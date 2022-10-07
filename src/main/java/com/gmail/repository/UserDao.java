@@ -19,4 +19,6 @@ public interface UserDao extends JpaRepository<User,String> {
     
     @Query("select u from User u WHERE u.email LIKE ?1%")
     List<User> searchUsers(String token);
+
+    Optional<User> findByMobileNumber(String mobileNumber);
 }

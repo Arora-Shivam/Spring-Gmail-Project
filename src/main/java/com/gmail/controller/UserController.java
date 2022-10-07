@@ -71,7 +71,7 @@ public class UserController {
     
     //Raj
     @PostMapping(value = "/draft")
-   	public ResponseEntity<String> draftMail(@RequestBody Mail mail){
+   	public ResponseEntity<String> draftMail(@RequestBody MailDto mail){
 
 		userService.draftMail(mail);
 		return new ResponseEntity<>("Mail saved to draft",HttpStatus.ACCEPTED);
@@ -81,18 +81,20 @@ public class UserController {
 	//Shivam
     @PostMapping(value = "/trash/{mailId}")
 	public ResponseEntity<String> deleteMail(@PathVariable("mailId") int mailId){
-    	Optional<Mail> mail=mailDao.findById(mailId);
-    	
-    	if(mail.isPresent()) {
-    			System.out.println("Mail found");
-    			userService.deleteMail(mail.get());
-    			return new ResponseEntity<String>("Mail Deleted Successfully",HttpStatus.OK);
-    		
-    	}
-    	else {
-    	       throw new NoMailFound("No Mail Found");
-    	}
-    	
+//    	Optional<Mail> mail=mailDao.findById(mailId);
+//
+//    	if(mail.isPresent()) {
+//    			System.out.println("Mail found");
+//    			userService.deleteMail(mailId);
+//    			return new ResponseEntity<String>("Mail Deleted Successfully",HttpStatus.OK);
+//
+//    	}
+//    	else {
+//    	       throw new NoMailFound("No Mail Found");
+//    	}
+
+		userService.deleteMail(mailId);
+		return new ResponseEntity<String>("Mail Deleted Successfully",HttpStatus.OK);
 
 	}
 	//Shivam
@@ -125,8 +127,12 @@ public class UserController {
 		System.out.println("check");
 		return new ResponseEntity<>("Successfully Logged Out",HttpStatus.ACCEPTED);
 	}
-	
-	
+
+	@DeleteMapping(value = "/emptyTrash")
+	public ResponseEntity<String> emptyTrash(){
+		userService.emptyTrash();
+		return new ResponseEntity<>("Trash cleared",HttpStatus.ACCEPTED);
+	}
 	
 	
 }
