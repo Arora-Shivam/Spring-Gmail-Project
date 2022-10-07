@@ -20,7 +20,7 @@ public class ProjectSecurityConfig {
 
 					auth
 						.antMatchers("/admin/**").hasRole("ADMIN")
-						.antMatchers("/mail","/register","/login").permitAll()
+						.antMatchers("/mail","/register","/login","/welcome").permitAll()
 				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred/**","/deleteMail","/starred/")
 				        .authenticated()
 				        .and().csrf().disable()

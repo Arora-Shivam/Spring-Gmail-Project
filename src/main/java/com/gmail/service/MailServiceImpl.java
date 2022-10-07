@@ -193,8 +193,12 @@ public class MailServiceImpl implements MailService{
         else {
 	        	
 					List<Mail> starredMails=currentLogedInUser.getStarred();
+					try {
 					starredMails.removeAll(getDeletedMails());
-					
+					}
+					catch(NoMailFound n) {
+						
+					}
 						if(starredMails.size()==0) {
 							throw new NoMailFound("You have not Starred any mails yet");
 						}

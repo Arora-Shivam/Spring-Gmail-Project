@@ -175,11 +175,18 @@ public class UserServiceImpl implements UserService{
         else {
 	        Optional<Mail> mailOptional = mailDao.findById(mailId);
 	        if(mailOptional.isPresent()) {
+	        	if(currentUser.getStarred().contains(mailOptional.get())) {
+	        		currentUser.getStarred().remove(mailOptional.get());
+	        		userDao.save(currentUser);
+	        		return false;
+	        	}
+	        	else {
 		        currentUser.getStarred().add(mailOptional.get());
 		
 		        userDao.save(currentUser);
 		
 		        return true;
+	        	}
 	        }
 	        else {
 	        	throw new NoMailFound("Mail Does not Exist");

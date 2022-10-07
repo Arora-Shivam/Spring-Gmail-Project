@@ -65,8 +65,11 @@ public class UserController {
     @PostMapping(value = "/starred/{mailId}")
 	public ResponseEntity<String> starredMail(@PathVariable("mailId") int mailId){
 			
-				userService.starredMail(mailId);
-				return new ResponseEntity<>("Starred successfully", HttpStatus.ACCEPTED);
+				if(userService.starredMail(mailId))
+					return new ResponseEntity<>("Starred successfully", HttpStatus.ACCEPTED);
+				else 
+					return new ResponseEntity<>("Mail Unstarred successfully", HttpStatus.ACCEPTED);	
+				
 	}
     
     //Raj
