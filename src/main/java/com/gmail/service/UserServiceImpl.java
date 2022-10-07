@@ -1,6 +1,10 @@
 package com.gmail.service;
 
+
 import com.gmail.exception.NoMailFound;
+
+import com.gmail.exception.PasswordMisMatchException;
+
 import com.gmail.exception.UserAlreadyExistException;
 import com.gmail.exception.UserNotFoundException;
 import com.gmail.module.Mail;
@@ -16,9 +20,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -50,13 +57,25 @@ public class UserServiceImpl implements UserService{
 
             userWithEncoder.setEmail(user.getEmail());
             userWithEncoder.setRole(user.getRole());
+
+            if(!checkAge(user.getDateOfBirth())){
+                throw new IllegalArgumentException("Age should be atlease 18");
+            }
+
             userWithEncoder.setDateOfBirth(user.getDateOfBirth());
+
+            if(!isValidPassword(user.getPassword())){
+                throw new PasswordMisMatchException("Please follow password rules");
+            }
             userWithEncoder.setPassword(passwordEncoder.encode(user.getPassword()));
             userWithEncoder.setFirstName(user.getFirstName());
             userWithEncoder.setLastName(user.getLastName());
             userWithEncoder.setMobileNumber(user.getMobileNumber());
 
+            System.out.println(userWithEncoder);
+
             userDao.save(userWithEncoder);
+            System.out.println("check");
         }
 
         return true;
@@ -209,8 +228,30 @@ public class UserServiceImpl implements UserService{
 			}
         }
 	}
-    
-    
+
+    @Override
+    public boolean isValidPassword(String password) {
+        if(password == null){
+            return false;
+        }
+
+        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
+        Pattern p = Pattern.compile(regex);
+
+        Matcher m = p.matcher(password);
+
+        return m.matches();
+    }
+
+    public boolean checkAge(LocalDate date){
+
+        LocalDate today = LocalDate.now();
+
+        if(today.getYear()-date.getYear() >= 18 ) {
+            return true;
+        }
+        return false;
+    }
 
 
 }
