@@ -35,7 +35,9 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<String> addUser(@RequestBody User user){
-        boolean response = userService.addUser(user);
+    	
+    	boolean response = userService.addUser(user);
+        
         return new ResponseEntity<>("user added", HttpStatus.ACCEPTED);
     }
 
@@ -74,7 +76,8 @@ public class UserController {
     	Optional<Mail> mail=mailDao.findById(mailId);
     	
     	if(mail.isPresent()) {
-    		
+    			System.out.println("Mail found");
+    			userService.deleteMail(mail.get());
     			return new ResponseEntity<String>("Mail Deleted Successfully",HttpStatus.OK);
     		
     	}

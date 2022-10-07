@@ -93,12 +93,26 @@ public class MailServiceImpl implements MailService{
         }
         else {
 	        Set<Mail> mailSet = new HashSet<>();
-	
-	        mailSet.addAll(user.getDraft());
-	        mailSet.addAll(user.getSent());
-	        mailSet.addAll(user.getStarred());
-	        mailSet.addAll(inbox());
-	        mailSet.removeAll(getDeletedMails());
+	        
+	        
+	        
+	        try {
+	        		if(user.getDraft().size()>0)
+	        			mailSet.addAll(user.getDraft());
+	    	        if(user.getSent().size()>0)
+	    	        	mailSet.addAll(user.getSent());
+	    	        if(user.getStarred().size()>0)
+	    	        	mailSet.addAll(user.getStarred());
+	    	        	
+	    	        	mailSet.addAll(inbox());
+	    	        
+	    	        System.out.println("All ");
+	    	        	mailSet.removeAll(user.getTrashMails());
+	    	        
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+	        
 	 
 	        List<Mail> allMail = new ArrayList<>(mailSet);
 	

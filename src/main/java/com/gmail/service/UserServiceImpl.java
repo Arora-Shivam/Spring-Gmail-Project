@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -176,8 +177,18 @@ public class UserServiceImpl implements UserService{
         }
         else {
         	//If the current user has sent and recieved mail then only we can delete it
-			if(mailService.getAllMail().contains(mail)) {
+        	System.out.println("Mail before added to trash");
+        
+        	
+        	List<Mail> allMails=new ArrayList<>();
+        	allMails.addAll(currentLogenInUser.getSent());
+        	allMails.addAll(currentLogenInUser.getDraft());
+        	
+        	allMails.addAll(mailDao.findByRecievers(currentLogenInUser));
+        	
+			if(allMails.contains(mail)) {
 				currentLogenInUser.getTrashMails().add(mail);
+				System.out.println("Mail added to Trash");
 				userDao.save(currentLogenInUser);
 				return true;
 			}	

@@ -18,6 +18,7 @@ public class ProjectSecurityConfig {
             try {
 
 				auth.antMatchers("/mail","/register","/login").permitAll()
+						.antMatchers("/admin").hasRole("ADMIN")
 				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred/**","/deleteMail","/logout","/starred/")
 				        .authenticated()
 				        .and().csrf().disable();
