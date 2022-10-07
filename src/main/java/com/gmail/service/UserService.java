@@ -18,11 +18,14 @@ public interface UserService {
 
     public boolean starredMail(int mailId);
 
-    public boolean draftMail(Mail mail);
+    public boolean draftMail(MailDto mail);
     
-    public boolean deleteMail(Mail mail);
-    
+    public boolean deleteMail(int mailId);
+
+
     public boolean restoreMail(Mail mail);
 
     public boolean isValidPassword(String password);
+
+    public void emptyTrash();
 }

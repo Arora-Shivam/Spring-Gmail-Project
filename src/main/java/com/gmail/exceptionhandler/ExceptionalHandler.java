@@ -88,9 +88,13 @@ public class ExceptionalHandler {
    
     
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ErrorDetails> userNotFound(UsernameNotFoundException userNotFoundException,WebRequest webRequest){
+    public ResponseEntity<ErrorDetails> userNotFound(UsernameNotFoundException userNameNotFoundException,WebRequest webRequest){
     	
-    	ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), HttpStatus.NOT_FOUND.value() ,"Not Found" ,userNotFoundException.getMessage());
+    	ErrorDetails errorDetails=new ErrorDetails(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value() ,
+                "Not Found" ,
+                userNameNotFoundException.getMessage());
     	
     	return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.NOT_FOUND);
     	
@@ -98,7 +102,11 @@ public class ExceptionalHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorDetails> userNotFound(UserNotFoundException userNotFoundException,WebRequest webRequest){
     	
-    	ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), HttpStatus.NOT_FOUND.value() ,"Not Found" ,userNotFoundException.getMessage());
+    	ErrorDetails errorDetails=new ErrorDetails(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value() ,
+                "Not Found" ,
+                userNotFoundException.getMessage());
     	
     	return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.NOT_FOUND);
     	
@@ -108,7 +116,11 @@ public class ExceptionalHandler {
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<ErrorDetails> userAlreadyExistException(UserAlreadyExistException userAlreadyExistException,WebRequest webRequest){
     	
-    	ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), HttpStatus.CONFLICT.value() ,"User Already Existed with this Email id" ,userAlreadyExistException.getMessage());
+    	ErrorDetails errorDetails=new ErrorDetails(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value() ,
+                "User Already Exist" ,
+                userAlreadyExistException.getMessage());
     	return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.CONFLICT);
     }
     

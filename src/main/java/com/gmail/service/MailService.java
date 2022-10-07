@@ -21,4 +21,6 @@ public interface MailService {
     public List<Mail> getDeletedMails();
     
     public List<Mail> getStarredMails();
+
+
 }

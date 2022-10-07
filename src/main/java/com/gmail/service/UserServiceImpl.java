@@ -54,6 +54,12 @@ public class UserServiceImpl implements UserService{
 
         Optional<User> optionalUser = userDao.findByEmail(user.getEmail());
 
+        Optional<User> optionalMobile = userDao.findByMobileNumber(user.getMobileNumber());
+
+        if(optionalMobile.isPresent()){
+            throw new UserAlreadyExistException(user.getMobileNumber()+" already exist please use different mobile number");
+        }
+
         if(optionalUser.isPresent()){
             throw new UserAlreadyExistException("Email already exist with the id "+ user.getEmail());
         }else {
@@ -195,7 +201,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public boolean draftMail(Mail mail) {
+    public boolean draftMail(MailDto mailDto) {
         
     	User currentUser = getCurrentUser.getCurrentUser();
         
@@ -203,7 +209,11 @@ public class UserServiceImpl implements UserService{
         	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
         else {
+            Mail mail = new Mail();
+            mail.setSender(currentUser);
+            mail.setBody(mailDto.getBody());
 	        mail.setTimeStamp(ZonedDateTime.now());
+            mail.setRecievers(mailDto.getRecievers());
 	        mailDao.save(mail);
 	
 	        currentUser.getDraft().add(mail);
@@ -216,37 +226,80 @@ public class UserServiceImpl implements UserService{
     }
 
 	@Override
-	public boolean deleteMail(Mail mail) {		
-		
+	public boolean deleteMail(int mailId) {
+
 		User currentLogenInUser=getCurrentUser.getCurrentUser();
-		
-		
-		if(currentLogenInUser==null) {
-        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+
+
+//		if(currentLogenInUser==null) {
+//        	throw new UsernameNotFoundException("User session expired, Please Login Again");
+//        }
+//        else {
+//        	//If the current user has sent and recieved mail then only we can delete it
+//        	System.out.println("Mail before added to trash");
+//
+//
+//        	List<Mail> allMails=new ArrayList<>();
+//        	allMails.addAll(currentLogenInUser.getSent());
+//        	allMails.addAll(currentLogenInUser.getDraft());
+//
+//        	allMails.addAll(mailDao.findByRecievers(currentLogenInUser));
+//
+//			if(allMails.contains(mail)) {
+//				currentLogenInUser.getTrashMails().add(mail);
+//				System.out.println("Mail added to Trash");
+//				userDao.save(currentLogenInUser);
+//				return true;
+//			}
+//			else{
+//				throw new NoMailFound("Mail Does not Exist");
+//			}
+//        }
+
+        if(currentLogenInUser==null) {
+            throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
         else {
-        	//If the current user has sent and recieved mail then only we can delete it
-        	System.out.println("Mail before added to trash");
-        
-        	
-        	List<Mail> allMails=new ArrayList<>();
-        	allMails.addAll(currentLogenInUser.getSent());
-        	allMails.addAll(currentLogenInUser.getDraft());
-        	
-        	allMails.addAll(mailDao.findByRecievers(currentLogenInUser));
-        	
-			if(allMails.contains(mail)) {
-				currentLogenInUser.getTrashMails().add(mail);
-				System.out.println("Mail added to Trash");
-				userDao.save(currentLogenInUser);
-				return true;
-			}	
-			else{
-				throw new NoMailFound("Mail Does not Exist");
-			}
+            Optional<Mail> mail = mailDao.findById(mailId);
+
+            List<Mail> allMail = mailService.getAllMail();
+
+            Mail temp = null;
+            for(Mail mail1:allMail){
+                if(mail1.getMailId()==mailId){
+                    temp = mail1;
+                    break;
+                }
+            }
+
+            if (temp != null){
+
+                List<Mail> inbox = mailService.inbox();
+                inbox.remove(temp);
+
+                List<Mail> sentBox = currentLogenInUser.getSent();
+                sentBox.remove(temp);
+
+                List<Mail> draftBox = currentLogenInUser.getDraft();
+                draftBox.remove(temp);
+
+                List<Mail> starred = currentLogenInUser.getStarred();
+                starred.remove(temp);
+
+                currentLogenInUser.getTrashMails().add(temp);
+
+                userDao.save(currentLogenInUser);
+
+            }else{
+                throw new NoMailFound("Mail Not found");
+            }
+
         }
-		
+
+        return true;
+
 	}
+
 
 	@Override
 	public boolean restoreMail(Mail mail) {
@@ -303,6 +356,19 @@ public class UserServiceImpl implements UserService{
     	
     	
     	return true;
+    }
+
+    @Override
+    public void emptyTrash() {
+        User currentLogedInUser = getCurrentUser.getCurrentUser();
+
+        if(currentLogedInUser==null) {
+            throw new UsernameNotFoundException("User session expired, Please Login Again");
+        }else {
+            currentLogedInUser.setTrashMails(null);
+            userDao.save(currentLogedInUser);
+        }
+
     }
 
 }

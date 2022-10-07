@@ -1,6 +1,11 @@
+
 --Mobile Number Validation While registering(Raj)
 --Unstar mail(Shivam)(Done)
 --Mail Draft(Change request body to MailDto)(Raj)
 --Deleting the mail permanently **(Raj)
 --DELETING THE USER permanently (shivam)
 --UML Diagram
+--Unstar mail
+--Deleting the mail permanently -- partially completed
+--DELETING THE USER permanently
+
