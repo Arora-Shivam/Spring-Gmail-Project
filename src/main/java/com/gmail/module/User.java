@@ -34,15 +34,15 @@ public class User {
 	private String email;
 
 	@NotNull
-	@Pattern(regexp="[a-z]{3,12}", message = "First Name must not contains numbers or special characters")
+	@Pattern(regexp="[a-zA-Z]{3,12}", message = "First Name must not contains numbers or special characters")
 	private String firstName;
 
 	@NotNull
-	@Pattern(regexp="[a-z]{3,12}", message = "Last Name must not contains numbers or special characters")
+	@Pattern(regexp="[a-zA-Z]{3,12}", message = "Last Name must not contains numbers or special characters")
 	private String lastName;
 
 	@NotNull
-	@Pattern(regexp="[0-9]{10}", message = "Mobile number must have 10 digits")
+	@Pattern(regexp="[6-9]{1}[0-9]{9}", message = "Mobile number must have 10 digits")
 	private String mobileNumber;
 
 	@NotNull
@@ -54,13 +54,9 @@ public class User {
 	private String password;
 
 
-	private String role; // Admin , User
-	
-	
-//	@OneToMany
-//	@JsonIgnore
-//	@JoinColumn(name="recieved_mail")
-//	private List<Mail> Inbox=new ArrayList<>();
+	@JsonIgnore
+	private String role = "ROLE_USER"; // Admin , User
+
 
 
 	@OneToMany

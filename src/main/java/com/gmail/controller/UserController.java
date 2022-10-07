@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-
 public class UserController {
 
     @Autowired
@@ -112,7 +111,11 @@ public class UserController {
 		return new ResponseEntity<>(mailList,HttpStatus.ACCEPTED);
 	}
 	
-	
+	@GetMapping(value = "/end")
+	public ResponseEntity<String> logout(){
+		System.out.println("check");
+		return new ResponseEntity<>("Successfully Logged Out",HttpStatus.ACCEPTED);
+	}
 	
 	
 	

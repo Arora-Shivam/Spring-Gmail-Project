@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class ProjectSecurityConfig {
@@ -18,9 +19,11 @@ public class ProjectSecurityConfig {
             try {
 
 				auth.antMatchers("/mail","/register","/login").permitAll()
-				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred/**","/deleteMail","/logout","/starred/")
+				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred/**","/deleteMail","/starred/")
 				        .authenticated()
-				        .and().csrf().disable();
+				        .and().csrf().disable()
+                        .logout()
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/end");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
