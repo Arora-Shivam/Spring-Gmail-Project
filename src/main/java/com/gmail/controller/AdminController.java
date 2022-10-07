@@ -32,7 +32,7 @@ public class AdminController {
 		
 	}
 	
-	@DeleteMapping("/user/{id}")
+	@DeleteMapping("/user/delete/{id}")
 	public ResponseEntity<String> deleteUser(@PathVariable String id){
 		
 		adminService.deleteUser(id);

@@ -57,6 +57,7 @@ public class MailServiceImpl implements MailService{
 	        for(Mail mailDrafted : draftedMail){
 	            mailSentByUser.remove(mailDrafted);
 	        }
+	        	mailSentByUser.removeAll(user.getTrashMails());
 	
 	        if(mailSentByUser.size() != 0){
 	            return mailSentByUser;
@@ -192,10 +193,13 @@ public class MailServiceImpl implements MailService{
         else {
 	        	
 					List<Mail> starredMails=currentLogedInUser.getStarred();
+					starredMails.removeAll(getDeletedMails());
+					
 						if(starredMails.size()==0) {
 							throw new NoMailFound("You have not Starred any mails yet");
 						}
 						else {
+							
 							return starredMails;
 						}
 			        

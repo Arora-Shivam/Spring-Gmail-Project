@@ -85,20 +85,17 @@ public class ExceptionalHandler {
 
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails> generalException(Exception exception, WebRequest request){
-
-        ErrorDetails errorDetail = new ErrorDetails(
-                LocalDateTime.now(),
-                HttpStatus.METHOD_NOT_ALLOWED.value(),
-                "BAD REQUEST",
-                request.getDescription(false)
-        );
-
-        return new ResponseEntity<ErrorDetails>(errorDetail, HttpStatus.METHOD_NOT_ALLOWED);
-    }
+   
     
     @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorDetails> userNotFound(UsernameNotFoundException userNotFoundException,WebRequest webRequest){
+    	
+    	ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), HttpStatus.NOT_FOUND.value() ,"Not Found" ,userNotFoundException.getMessage());
+    	
+    	return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.NOT_FOUND);
+    	
+    }
+    @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorDetails> userNotFound(UserNotFoundException userNotFoundException,WebRequest webRequest){
     	
     	ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), HttpStatus.NOT_FOUND.value() ,"Not Found" ,userNotFoundException.getMessage());
@@ -115,6 +112,17 @@ public class ExceptionalHandler {
     	return new ResponseEntity<ErrorDetails>(errorDetails,HttpStatus.CONFLICT);
     }
     
-    
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetails> generalException(Exception exception, WebRequest request){
+
+        ErrorDetails errorDetail = new ErrorDetails(
+                LocalDateTime.now(),
+                HttpStatus.METHOD_NOT_ALLOWED.value(),
+                "BAD REQUEST",
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<ErrorDetails>(errorDetail, HttpStatus.METHOD_NOT_ALLOWED);
+    }
 }
 

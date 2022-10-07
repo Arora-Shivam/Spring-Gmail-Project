@@ -18,7 +18,9 @@ public class ProjectSecurityConfig {
         httpSecurity.authorizeHttpRequests(auth ->{
             try {
 
-				auth.antMatchers("/mail","/register","/login").permitAll()
+					auth
+						.antMatchers("/admin/**").hasRole("ADMIN")
+						.antMatchers("/mail","/register","/login").permitAll()
 				        .antMatchers("/inbox","/sentBox","/recieved","/compose","/starred/**","/deleteMail","/starred/")
 				        .authenticated()
 				        .and().csrf().disable()

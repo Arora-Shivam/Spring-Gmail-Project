@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -89,6 +92,10 @@ public class UserServiceImpl implements UserService{
         	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
         else {
+//        	currentUser.setSent(null);
+//        	currentUser.setStarred(null);
+//        	currentUser.setTrashMails(null);
+//        	currentUser.s
 	        userDao.delete(currentUser);
 	
 	        getCurrentUser.logout();
@@ -112,7 +119,23 @@ public class UserServiceImpl implements UserService{
 	        
 	        	mail.setSender(currentSender);
 		        
-		        mail.setRecievers(mailDto.getRecievers());
+//	        	this.checkIfUserExist(mailDto.getRecievers());
+//		        mail.setRecievers(mailDto.getRecievers());
+	        	
+//	        	for(User user :mailDto.getRecievers()) {
+//	        		try {
+//		        		if(checkIfUserExist(user))
+//		        			mail.getRecievers().add(user);
+//	        		}
+//	        		catch(Exception e) {
+//	        			System.out.println(e.getMessage());
+//	        		}
+//	        	}
+	        	
+	        	List<User> validUsers=mailDto.getRecievers().stream().filter((u1)->this.checkIfUserExist(u1)).collect(Collectors.toList());
+		        
+	        	mail.setRecievers(validUsers);
+	        	
 		        mail.setBody(mailDto.getBody());
 				mail.setTimeStamp(ZonedDateTime.now());
 				
@@ -263,6 +286,16 @@ public class UserServiceImpl implements UserService{
         }
         return false;
     }
-
+    
+    public boolean checkIfUserExist(User user) {
+    	
+    	
+    		if(!userDao.findByEmail(user.getEmail()).isPresent()) {
+    			throw new UserNotFoundException("User with email "+user.getEmail()+" does not exist");
+    		}
+    	
+    	
+    	return true;
+    }
 
 }

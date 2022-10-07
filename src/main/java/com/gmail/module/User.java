@@ -54,8 +54,8 @@ public class User {
 	private String password;
 
 
-	@JsonIgnore
-	private String role = "ROLE_USER"; // Admin , User
+	
+	private String role; // Admin , User
 
 
 
