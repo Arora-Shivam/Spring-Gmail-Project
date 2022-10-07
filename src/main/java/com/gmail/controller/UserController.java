@@ -1,8 +1,15 @@
 package com.gmail.controller;
 
+
 import com.gmail.exception.NoMailFound;
+
+
 import com.gmail.module.Mail;
 import com.gmail.module.MailDto;
+
+
+
+
 import com.gmail.module.User;
 import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
@@ -20,6 +27,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 
 public class UserController {
@@ -34,10 +43,10 @@ public class UserController {
 	private MailDao mailDao;
 
     @PostMapping("/user")
-    public ResponseEntity<String> addUser(@RequestBody User user){
-    	
-    	boolean response = userService.addUser(user);
-        
+    public ResponseEntity<String> addUser(@Valid @RequestBody User user){
+
+        boolean response = userService.addUser(user);
+
         return new ResponseEntity<>("user added", HttpStatus.ACCEPTED);
     }
 

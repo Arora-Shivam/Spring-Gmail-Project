@@ -23,4 +23,6 @@ public interface UserService {
     public boolean deleteMail(Mail mail);
     
     public boolean restoreMail(Mail mail);
+
+    public boolean isValidPassword(String password);
 }
