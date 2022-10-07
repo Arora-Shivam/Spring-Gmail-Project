@@ -24,17 +24,11 @@ public class AttachmentController {
 
 
     @PostMapping("/upload")
-    public ResponseEntity<ResponseData> UploadFile( @RequestParam("file") MultipartFile file) throws Exception {
-        Attachment attachment = attachementService.saveAttachment(file);
-        String downloadURl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
-                .path(attachment.getId())
-                .toUriString();
+    public ResponseEntity<String> UploadFile( @RequestParam("file") MultipartFile[] file) throws Exception {
+        String str = attachementService.saveAttachment(file);
 
-        return new ResponseEntity<>(new ResponseData(attachment.getFileName(),
-                downloadURl,
-                file.getContentType(),
-                file.getSize()), HttpStatus.OK);
+
+        return new ResponseEntity<>(new String("All files are uploaded"), HttpStatus.OK);
     }
 
     @GetMapping("/download/{fileId}")

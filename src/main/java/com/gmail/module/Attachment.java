@@ -12,9 +12,9 @@ import javax.persistence.*;
 public class Attachment {
 
     @Id
-    @GeneratedValue ( generator = "uuid" )
-    @GenericGenerator ( name = "uuid", strategy = "uuid2" )
-    private String id;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private
+    Integer id;
     private String FileName;
     private String FileType;
     @Lob

@@ -58,6 +58,7 @@ public class Mail {
 	
 	
 	private String body;
-	
-	
+
+
+
 }
