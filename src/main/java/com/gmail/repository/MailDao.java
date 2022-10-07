@@ -17,6 +17,7 @@ public interface MailDao extends JpaRepository<Mail,Integer>{
 
 //    @Query("SELECT m FROM Mail m WHERE m.body LIKE %:keyWord%")
 //    List<Mail> seachByKeyWord(@Param("keyWord") String keyWord);
-
+    
+   
 
 }
