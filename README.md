@@ -8,15 +8,11 @@ This project is built by a team of 3 members.
 ## Features:
 - Authentication
 - Authorization
-- 
-- 
-- 
-- 
+- Mailing Features 
 
 ## Technology Used
 
 - JAVA
-- Spring
 - Spring Boot
 - Spring data JPA
 - Spring security
