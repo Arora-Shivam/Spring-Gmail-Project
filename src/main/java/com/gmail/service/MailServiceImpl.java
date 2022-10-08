@@ -32,11 +32,13 @@ public class MailServiceImpl implements MailService{
         	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
         else {
-	        if(mailDao.findByRecievers(user).size() != 0){
-	            return mailDao.findByRecievers(user);
-	        }
-	
-	        throw new NoMailFound("Your Inbox is Empty");
+
+			return mailDao.findByRecievers(user);
+//	        if(mailDao.findByRecievers(user).size() != 0){
+//
+//	        }
+//
+//	        throw new NoMailFound("Your Inbox is Empty");
         }
     }
 
@@ -58,12 +60,13 @@ public class MailServiceImpl implements MailService{
 	            mailSentByUser.remove(mailDrafted);
 	        }
 	        	mailSentByUser.removeAll(user.getTrashMails());
-	
-	        if(mailSentByUser.size() != 0){
-	            return mailSentByUser;
-	        }
-	
-	        throw new NoMailFound("Your Sent Box is Empty");
+
+			return mailSentByUser;
+//	        if(mailSentByUser.size() != 0){
+//
+//	        }
+//
+//	        throw new NoMailFound("Your Sent Box is Empty");
         }
     }
 
@@ -76,11 +79,13 @@ public class MailServiceImpl implements MailService{
         	throw new UsernameNotFoundException("User session expired, Please Login Again");
         }
         else {
-	        if(user.getDraft().size() != 0){
-	            return user.getDraft();
-	        }
-	
-	        throw new NoMailFound("Your Draft is Empty");
+
+			return user.getDraft();
+//	        if(user.getDraft().size() != 0){
+//
+//	        }
+//
+//	        throw new NoMailFound("Your Draft is Empty");
         }
     }
 
@@ -116,12 +121,13 @@ public class MailServiceImpl implements MailService{
 	        
 	 
 	        List<Mail> allMail = new ArrayList<>(mailSet);
-	
-	        if(allMail.size() != 0){
-	            return allMail;
-	        }
-	
-	        throw new NoMailFound("You Dont Have Any Mails");
+
+			return allMail;
+//	        if(allMail.size() != 0){
+//
+//	        }
+//
+//	        throw new NoMailFound("You Dont Have Any Mails");
         }
 
 
@@ -154,11 +160,12 @@ public class MailServiceImpl implements MailService{
 
         List<Mail> allMail = new ArrayList<>(resultMails);
 
-        if(allMail.size() != 0){
-            return allMail;
-        }
-
-        throw new NoMailFound("You Dont Have Any Mails");
+		return allMail;
+//        if(allMail.size() != 0){
+//
+//        }
+//
+//        throw new NoMailFound("You Dont Have Any Mails");
     }
 
 	@Override
@@ -172,13 +179,15 @@ public class MailServiceImpl implements MailService{
         }
         else {
 			List<Mail> deletedMails=currentLogedInUser.getTrashMails();
-			
-			if(deletedMails.size()==0) {
-				throw new NoMailFound("Trash is empty");
-			}
-			else {
-				return deletedMails;
-			}
+
+
+			return deletedMails;
+//			if(deletedMails.size()==0) {
+//				throw new NoMailFound("Trash is empty");
+//			}
+//			else {
+//
+//			}
         }
 	}
 
@@ -199,13 +208,14 @@ public class MailServiceImpl implements MailService{
 					catch(NoMailFound n) {
 						
 					}
-						if(starredMails.size()==0) {
-							throw new NoMailFound("You have not Starred any mails yet");
-						}
-						else {
-							
-							return starredMails;
-						}
+					return starredMails;
+//						if(starredMails.size()==0) {
+//							throw new NoMailFound("You have not Starred any mails yet");
+//						}
+//						else {
+//
+//
+//						}
 			        
 		      
 		}

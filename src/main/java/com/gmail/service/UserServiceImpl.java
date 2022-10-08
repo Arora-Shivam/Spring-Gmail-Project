@@ -277,6 +277,9 @@ public class UserServiceImpl implements UserService{
                 List<Mail> inbox = mailService.inbox();
                 inbox.remove(temp);
 
+                temp.getRecievers().remove(currentLogenInUser);
+                mailDao.save(temp);
+
                 List<Mail> sentBox = currentLogenInUser.getSent();
                 sentBox.remove(temp);
 
@@ -310,9 +313,11 @@ public class UserServiceImpl implements UserService{
         }
         else {
 			//If mail exist in trash box only then we can restore
-			if(mailService.getDeletedMails().contains(mail)) {
+			if(currentLogenInUser.getTrashMails().contains(mail)) {
+
 				currentLogenInUser.getTrashMails().remove(mail);
-			
+                mail.getRecievers().add(currentLogenInUser);
+                mailDao.save(mail);
 				userDao.save(currentLogenInUser);
 			
 				return true;
