@@ -55,21 +55,21 @@ public class User {
 
 
 
-	@OneToMany
+	@OneToMany(mappedBy = "sender")
 	@JsonIgnore
 	//@JoinColumn(name = "sent_mail")
 	private List<Mail> sent=new ArrayList<>();
 
-	@OneToMany
+	@ElementCollection
 	@JsonIgnore
 	//@JoinColumn(name = "starred_mail")
 	private List<Mail> starred = new ArrayList<>();
 
-	@OneToMany
+	@ElementCollection
 	@JsonIgnore
 	private List<Mail> draft = new ArrayList<>();;
 
-	@OneToMany
+	@ElementCollection
 	@JsonIgnore
 	private List<Mail> trashMails= new ArrayList<>();
 
