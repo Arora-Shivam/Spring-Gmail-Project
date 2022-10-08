@@ -5,6 +5,10 @@ Users can receive emails up to 50 megabytes in size, including attachments, whil
 We worked on creating REST API and writing business logic for an GMail application. Our project performs fundamental operations of an email application, where our user's data is validated, mapped, processed with business logic & persisted in the database.
 This project is built by a team of 3 members.
 
+## ER Diagram:
+
+![ER Diagram](https://github.com/Arora-Shivam/Spring-Gmail-Project/blob/master/src/main/resources/static/UML-pdf.png)
+
 ## Features:
 - Authentication
 - Authorization
