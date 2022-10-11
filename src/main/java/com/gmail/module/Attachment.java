@@ -1,20 +1,33 @@
 package com.gmail.module;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 
+@Data
+@Entity
+@NoArgsConstructor
 public  class  Attachment {
 
-	private int id;
-//	
-//	@Embedded
-//	private Video video;
-//	
-//	@Embedded
-//	private Audio audio;
-//	
-//	@Embedded
-//	private PDF pdf;
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	private Integer id;
+
+
+	private String FileName;
+	private String FileType;
+
+	@JsonIgnore
+	@Lob
+	private byte[] data;
+
+	@ManyToOne
+	private Content content;
+
+
+
+
 }

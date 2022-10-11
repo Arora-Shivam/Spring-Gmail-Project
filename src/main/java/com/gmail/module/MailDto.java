@@ -23,7 +23,11 @@ public class MailDto {
 			)
     private List<User> recievers;
 
+	private String subject;
+
     private String body;
+
+	private int contentID;
 
 
 }

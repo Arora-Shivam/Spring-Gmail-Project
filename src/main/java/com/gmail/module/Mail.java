@@ -1,18 +1,10 @@
 package com.gmail.module;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -55,9 +47,13 @@ public class Mail {
 	}
 			)
 	private List<User> recievers;
-	
-	
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "content_id")
+	private Content content;
+
+	private String subject;
+
 	private String body;
-	
 	
 }

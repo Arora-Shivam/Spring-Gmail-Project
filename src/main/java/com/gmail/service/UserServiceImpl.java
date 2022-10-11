@@ -7,29 +7,26 @@ import com.gmail.exception.PasswordMisMatchException;
 
 import com.gmail.exception.UserAlreadyExistException;
 import com.gmail.exception.UserNotFoundException;
+import com.gmail.module.Content;
 import com.gmail.module.Mail;
 import com.gmail.module.MailDto;
 import com.gmail.module.User;
+import com.gmail.repository.ContentDao;
 import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
 import com.gmail.util.GetCurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -48,6 +45,9 @@ public class UserServiceImpl implements UserService{
     
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private ContentDao contentDao;
 
     @Override
     public boolean addUser(User user) throws UserAlreadyExistException {
@@ -117,6 +117,8 @@ public class UserServiceImpl implements UserService{
         Mail mail = new Mail();
 
         User currentSender =getCurrentUser.getCurrentUser();
+
+        Optional<Content> content = contentDao.findById(mailDto.getContentID());
         
        if(currentSender==null) {
     	   throw new UserNotFoundException("User session expired, Please Login Again");
@@ -141,9 +143,14 @@ public class UserServiceImpl implements UserService{
 	        	List<User> validUsers=mailDto.getRecievers().stream().filter((u1)->this.checkIfUserExist(u1)).collect(Collectors.toList());
 		        
 	        	mail.setRecievers(validUsers);
-	        	
+                mail.setSubject(mailDto.getSubject());
 		        mail.setBody(mailDto.getBody());
 				mail.setTimeStamp(ZonedDateTime.now());
+
+                if(content.isPresent()){
+                    mail.setContent(content.get());
+                }
+
 				
 				System.out.println("Before Mail Save");
 				System.out.println(mailDto.getRecievers());
