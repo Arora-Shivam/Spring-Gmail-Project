@@ -9,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gmail.module.Mail;
 
 @RestController
+@RequestMapping("/mail")
 public class MailController {
 
 	@Autowired
@@ -26,7 +28,7 @@ public class MailController {
 		return new ResponseEntity<>(inboxList, HttpStatus.ACCEPTED);
 	}
 	
-	//Raj
+	
 	@GetMapping(value = "/sent")
 	public ResponseEntity<List<Mail>> sent(){
 
@@ -35,7 +37,7 @@ public class MailController {
 
 	}
 	
-	//Shivam
+	
 	@GetMapping(value = "/starred")
 	public ResponseEntity<List<Mail>> starred(){
 		List<Mail> starredMails= mailService.getStarredMails();
@@ -44,7 +46,7 @@ public class MailController {
 	
 	}
 
-	//Raj
+	
 	@GetMapping(value = "/draft")
 	public ResponseEntity<List<Mail>> draft(){
 
@@ -53,7 +55,7 @@ public class MailController {
 		return new ResponseEntity<>(draftList, HttpStatus.ACCEPTED);
 	}
 
-	//Shivam
+	
 	@GetMapping(value = "/trash")
 	public ResponseEntity<List<Mail>> trash(){
 		

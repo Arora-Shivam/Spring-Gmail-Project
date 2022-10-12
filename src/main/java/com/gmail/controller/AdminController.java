@@ -18,11 +18,17 @@ import com.gmail.repository.UserDao;
 import com.gmail.service.AdminService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/mail/admin")
 public class AdminController {
 	
 	@Autowired
 	AdminService adminService;
+	
+	
+	// Handle		 --> / mail/admin/user
+	// What is does? --> Gives all the registered users 
+	// Request Type? --> Get request
+	// Input 		 --> None
 	@GetMapping("/user")
 	public ResponseEntity<List<User>> getAllUsers(){
 		
@@ -32,14 +38,25 @@ public class AdminController {
 		
 	}
 	
-	@DeleteMapping("/user/delete/{id}")
-	public ResponseEntity<String> deleteUser(@PathVariable String id){
-		
-		adminService.deleteUser(id);
-		return new ResponseEntity<String>("User Deleted Successfully",HttpStatus.OK);
-		
-	}
+	
+	// Handle		 --> / mail/admin/{email}
+	// What is does? --> Deletes a particular user by using its email. 
+	// Request Type? --> Delete request
+	// Input 		 --> Email  as path variable
+//	@DeleteMapping("/user/{id}")
+//	public ResponseEntity<String> deleteUser(@PathVariable String id){
+//		
+//		adminService.deleteUser(id);
+//		return new ResponseEntity<String>("User Deleted Successfully",HttpStatus.OK);
+//		
+//	}
 	 
+	
+	
+	// Handle		 --> / mail/admin/user/{email}
+	// What is does? --> search the users according to the email id 
+	// Request Type? --> Get request
+	// Input 		 --> Email  as path variable
 	@GetMapping("/user/{token}")
 	public ResponseEntity<List<User>> searchUsers(@PathVariable("token") String token){
 		
@@ -47,14 +64,8 @@ public class AdminController {
 		return new ResponseEntity<List<User>>(users,HttpStatus.FOUND);
 	}
 	
-//	 @PostMapping("/admin")
-//	    public ResponseEntity<String> addUser(@RequestBody User user){
-//	    	user.setRole("ROLE_ADMIN");
-//	    	boolean response = userService.addUser(user);
-//	        
-//	        return new ResponseEntity<>("user added", HttpStatus.ACCEPTED);
-//	    }
-//
+
+
 
 
 	

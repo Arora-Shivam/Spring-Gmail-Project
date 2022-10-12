@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@RequestMapping("/mail")
 public class AttachmentController {
 
 
@@ -21,7 +22,7 @@ public class AttachmentController {
     private AttachmentService attachementService;
 
 
-    @PostMapping("/upload")
+    @PostMapping("/attachment")
     public ResponseEntity<Content> UploadFile(@RequestParam("file") MultipartFile file) throws Exception {
         Content content = attachementService.saveAttachment(file);
 
@@ -29,7 +30,7 @@ public class AttachmentController {
         return new ResponseEntity<>(content, HttpStatus.OK);
     }
 
-    @GetMapping("/download/{fileId}")
+    @GetMapping("/attachment/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Integer fileId) throws Exception {
         Attachment attachment = attachementService.getAttachment(fileId);
         return  ResponseEntity.ok()
@@ -39,7 +40,5 @@ public class AttachmentController {
                                 + "\"")
                 .body(new ByteArrayResource(attachment.getData()));
     }
-
-
 
 }
