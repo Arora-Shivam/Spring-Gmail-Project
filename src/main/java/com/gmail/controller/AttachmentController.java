@@ -26,7 +26,10 @@ public class AttachmentController {
     @Autowired
     private AttachmentService attachementService;
 
-
+    // Handle		 --> /mail/attachment}
+    // What is does? --> add attachment to our mail
+    // Request Type? --> Post request
+    // Input 		 --> need to upload required file as MultipartFile
     @PostMapping("/attachment")
     public ResponseEntity<Content> UploadFile(@RequestParam("file") MultipartFile file) throws Exception {
         Content content = attachementService.saveAttachment(file);
@@ -35,6 +38,10 @@ public class AttachmentController {
         return new ResponseEntity<>(content, HttpStatus.OK);
     }
 
+    // Handle		 --> /mail/attachment/{fileId}}
+    // What is does? --> It downloads the attachment from mail
+    // Request Type? --> Post request
+    // Input 		 --> need to pass attachment Id to download the file
     @GetMapping("/attachment/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Integer fileId) throws Exception {
         Attachment attachment = attachementService.getAttachment(fileId);

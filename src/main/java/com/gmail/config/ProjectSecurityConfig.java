@@ -21,7 +21,8 @@ public class ProjectSecurityConfig {
 						.permitAll()
 						.antMatchers("/inbox", "/sentBox", "/recieved", "/compose", "/starred/**", "/deleteMail",
 								"/starred/", "/upload")
-						.authenticated().and().csrf().disable().logout()
+						.authenticated().and().csrf().disable().formLogin().loginProcessingUrl("/login").and()
+						.logout()
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/end");
 			} catch (Exception e) {
 				e.printStackTrace();

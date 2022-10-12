@@ -31,25 +31,9 @@ public class AdminController {
 	public ResponseEntity<List<User>> getAllUsers() {
 
 		List<User> users = adminService.getAllUsers();
-
 		return new ResponseEntity<>(users, HttpStatus.OK);
 
 	}
-
-	
-	// Handle		 --> / mail/admin/{email}
-	// What is does? --> Deletes a particular user by using its email. 
-	// Request Type? --> Delete request
-	// Input 		 --> Email  as path variable
-	
-//	@DeleteMapping("/user/{id}")
-//	public ResponseEntity<String> deleteUser(@PathVariable String id){
-//		
-//		adminService.deleteUser(id);
-//		return new ResponseEntity<String>("User Deleted Successfully",HttpStatus.OK);
-//		
-//	}
-	 
 	
 	
 	// Handle		 --> / mail/admin/user/{email}
