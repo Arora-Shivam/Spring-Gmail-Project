@@ -1,12 +1,12 @@
 package com.gmail.exception;
 
-public class NoMailFound extends RuntimeException{
+public class NoMailFound extends RuntimeException {
 
-    public NoMailFound(){
+	public NoMailFound() {
 
-    }
+	}
 
-    public NoMailFound(String msg){
-        super(msg);
-    }
+	public NoMailFound(String msg) {
+		super(msg);
+	}
 }

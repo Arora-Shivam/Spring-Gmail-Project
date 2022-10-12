@@ -1,46 +1,42 @@
 package com.gmail.controller;
 
-
-import com.gmail.exception.NoMailFound;
-
-
-import com.gmail.module.Mail;
-import com.gmail.module.MailDto;
-
-
-
-
-import com.gmail.module.User;
-import com.gmail.repository.MailDao;
-import com.gmail.repository.UserDao;
-import com.gmail.service.MailService;
-import com.gmail.service.UserService;
-
-import net.bytebuddy.implementation.bytecode.Throw;
-
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import com.gmail.exception.NoMailFound;
+import com.gmail.module.Mail;
+import com.gmail.module.MailDto;
+import com.gmail.module.User;
+import com.gmail.repository.MailDao;
+import com.gmail.service.MailService;
+import com.gmail.service.UserService;
 
 @RestController
 @RequestMapping("/mail")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private MailService mailService;
-	
+
 	@Autowired
 	private MailDao mailDao;
+
 	
 	// Handle		 --> /mail/user
 	// What is does? --> registers the User with the system
@@ -49,10 +45,11 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity<String> addUser(@Valid @RequestBody User user){
 
-        boolean response = userService.addUser(user);
+		boolean response = userService.addUser(user);
 
-        return new ResponseEntity<>("user added", HttpStatus.ACCEPTED);
-    }
+		return new ResponseEntity<>("user added", HttpStatus.ACCEPTED);
+	}
+
 
 	// Handle		 --> /mail/user
 	// What is does? --> deletes the User with the system
@@ -96,32 +93,24 @@ public class UserController {
     @PostMapping(value = "/draft")
    	public ResponseEntity<String> draftMail(@RequestBody MailDto mail){
 
-		userService.draftMail(mail);
-		return new ResponseEntity<>("Mail saved to draft",HttpStatus.ACCEPTED);
-   	}
 
+		userService.draftMail(mail);
+		return new ResponseEntity<>("Mail saved to draft", HttpStatus.ACCEPTED);
+	}
+
+    
 	// Handle		 --> /mail/trash/{mailId}
 	// What is does? --> Adding mail to trash
 	// Request Type? --> Post request
 	// Input 		 --> MailId as Path Variable
-    @PostMapping(value = "/trash/{mailId}")
-	public ResponseEntity<String> deleteMail(@PathVariable("mailId") int mailId){
-//    	Optional<Mail> mail=mailDao.findById(mailId);
-//
-//    	if(mail.isPresent()) {
-//    			System.out.println("Mail found");
-//    			userService.deleteMail(mailId);
-//    			return new ResponseEntity<String>("Mail Deleted Successfully",HttpStatus.OK);
-//
-//    	}
-//    	else {
-//    	       throw new NoMailFound("No Mail Found");
-//    	}
-
+	@PostMapping(value = "/trash/{mailId}")
+	public ResponseEntity<String> deleteMail(@PathVariable("mailId") int mailId) {
+	
 		userService.deleteMail(mailId);
-		return new ResponseEntity<String>("Mail Deleted Successfully",HttpStatus.OK);
+		return new ResponseEntity<String>("Mail Deleted Successfully", HttpStatus.OK);
 
 	}
+
 	
 	// Handle		 --> /mail/restore/{mailId}
 	// What is does? --> restoring a trash mail
@@ -148,20 +137,21 @@ public class UserController {
 	// Input 		 --> Search Keyword as Path Variable
     @GetMapping(value = "/search/{token}")
 	public ResponseEntity<List<Mail>> searchMail(@PathVariable("token") String email){
+
 		List<Mail> mailList = mailService.searchMail(email);
 
-		return new ResponseEntity<>(mailList,HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(mailList, HttpStatus.ACCEPTED);
 	}
 
+	
 	// Handle		 --> /mail/emptyTrash
 	// What is does? --> Deleting all the Trash mails
 	// Request Type? --> Delete request
 	// Input 		 --> None
 	@DeleteMapping(value = "/emptyTrash")
-	public ResponseEntity<String> emptyTrash(){
+	public ResponseEntity<String> emptyTrash() {
 		userService.emptyTrash();
-		return new ResponseEntity<>("Trash cleared",HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("Trash cleared", HttpStatus.ACCEPTED);
 	}
-	
-	
+
 }

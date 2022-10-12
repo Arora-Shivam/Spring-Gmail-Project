@@ -1,49 +1,37 @@
 package com.gmail.util;
 
-import com.gmail.config.SecurityUser;
-import com.gmail.module.User;
-import com.gmail.repository.UserDao;
-import lombok.Data;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.gmail.module.User;
+import com.gmail.repository.UserDao;
+
+import lombok.Data;
 
 @Repository
 @Data
 public class GetCurrentUser {
 
-    private Object principal;
+	private Object principal;
 
-    @Autowired
-    private UserDao userDao;
+	@Autowired
+	private UserDao userDao;
 
-//    public boolean checkLogin() {
-//
-//        principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if (principal instanceof UserDetails) {
-//            return true;
-//        }
-//
-//        return false;
-//
-//    }
+	public User getCurrentUser() {
+		principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    public User getCurrentUser() {
-        principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = ((UserDetails) principal).getUsername();
 
-            String username = ((UserDetails) principal).getUsername();
-            //SecurityUser securityCustomer = (SecurityUser) principal;
+		Optional<User> currentUser = userDao.findByEmail(username);
 
-            Optional<User> currentUser = userDao.findByEmail(username);
+		return currentUser.get();
+	}
 
-
-            return currentUser.get();
-    }
-
-    public void logout() {
-        SecurityContextHolder.clearContext();
-    }
+	public void logout() {
+		SecurityContextHolder.clearContext();
+	}
 }
