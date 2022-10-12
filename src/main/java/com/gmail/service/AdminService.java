@@ -7,8 +7,8 @@ import com.gmail.module.User;
 public interface AdminService {
 
 	public List<User> getAllUsers();
-	
+
 	public List<User> serchUser(String token);
-	
+
 	public boolean deleteUser(String email);
 }

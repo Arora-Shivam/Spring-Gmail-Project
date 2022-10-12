@@ -1,10 +1,20 @@
 package com.gmail.service;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.gmail.exception.NoMailFound;
-
 import com.gmail.exception.PasswordMisMatchException;
-
 import com.gmail.exception.UserAlreadyExistException;
 import com.gmail.exception.UserNotFoundException;
 import com.gmail.module.Content;
@@ -15,372 +25,292 @@ import com.gmail.repository.ContentDao;
 import com.gmail.repository.MailDao;
 import com.gmail.repository.UserDao;
 import com.gmail.util.GetCurrentUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserDao userDao;
-    
-    @Autowired
-    private MailDao mailDao;
+	@Autowired
+	private UserDao userDao;
 
-    @Autowired
-    private GetCurrentUser getCurrentUser;
-    
-    @Autowired
-    private MailService mailService;
+	@Autowired
+	private MailDao mailDao;
 
-    @Autowired
-    private ContentDao contentDao;
+	@Autowired
+	private GetCurrentUser getCurrentUser;
 
-    @Override
-    public boolean addUser(User user) throws UserAlreadyExistException {
+	@Autowired
+	private MailService mailService;
 
-        Optional<User> optionalUser = userDao.findByEmail(user.getEmail());
+	@Autowired
+	private ContentDao contentDao;
 
-        Optional<User> optionalMobile = userDao.findByMobileNumber(user.getMobileNumber());
+	@Override
+	public boolean addUser(User user) throws UserAlreadyExistException {
 
-        if(optionalMobile.isPresent()){
-            throw new UserAlreadyExistException(user.getMobileNumber()+" already exist please use different mobile number");
-        }
+		Optional<User> optionalUser = userDao.findByEmail(user.getEmail());
 
-        if(optionalUser.isPresent()){
-            throw new UserAlreadyExistException("Email already exist with the id "+ user.getEmail());
-        }else {
-            User userWithEncoder = new User();
+		Optional<User> optionalMobile = userDao.findByMobileNumber(user.getMobileNumber());
 
-            userWithEncoder.setEmail(user.getEmail());
-            userWithEncoder.setRole(user.getRole());
+		if (optionalMobile.isPresent()) {
+			throw new UserAlreadyExistException(
+					user.getMobileNumber() + " already exist please use different mobile number");
+		}
 
-            if(!checkAge(user.getDateOfBirth())){
-                throw new IllegalArgumentException("Age should be atlease 18");
-            }
+		if (optionalUser.isPresent()) {
+			throw new UserAlreadyExistException("Email already exist with the id " + user.getEmail());
+		} else {
+			User userWithEncoder = new User();
 
-            userWithEncoder.setDateOfBirth(user.getDateOfBirth());
+			userWithEncoder.setEmail(user.getEmail());
+			userWithEncoder.setRole(user.getRole());
 
-            if(!isValidPassword(user.getPassword())){
-                throw new PasswordMisMatchException("Please follow password rules");
-            }
-            userWithEncoder.setPassword(passwordEncoder.encode(user.getPassword()));
-            userWithEncoder.setFirstName(user.getFirstName());
-            userWithEncoder.setLastName(user.getLastName());
-            userWithEncoder.setMobileNumber(user.getMobileNumber());
+			if (!checkAge(user.getDateOfBirth())) {
+				throw new IllegalArgumentException("Age should be atlease 18");
+			}
 
-            System.out.println(userWithEncoder);
+			userWithEncoder.setDateOfBirth(user.getDateOfBirth());
 
-            userDao.save(userWithEncoder);
-            System.out.println("check");
-        }
+			if (!isValidPassword(user.getPassword())) {
+				throw new PasswordMisMatchException("Please follow password rules");
+			}
+			userWithEncoder.setPassword(passwordEncoder.encode(user.getPassword()));
+			userWithEncoder.setFirstName(user.getFirstName());
+			userWithEncoder.setLastName(user.getLastName());
+			userWithEncoder.setMobileNumber(user.getMobileNumber());
+			userDao.save(userWithEncoder);
+		}
 
-        return true;
-    }
-
-    @Override
-    public boolean deleteUser() {
-        User currentUser = getCurrentUser.getCurrentUser();
-        if(currentUser==null) {
-        	throw new UsernameNotFoundException("User session expired, Please Login Again");
-        }
-        else {
-//        	currentUser.setSent(null);
-//        	currentUser.setStarred(null);
-//        	currentUser.setTrashMails(null);
-//        	currentUser.s
-	        userDao.delete(currentUser);
-	
-	        getCurrentUser.logout();
-	
-	        return true;
-        }
-        
-    }
-
-    @Override
-	public boolean sentMail(MailDto mailDto) {
-
-        Mail mail = new Mail();
-
-        User currentSender =getCurrentUser.getCurrentUser();
-
-        Optional<Content> content = contentDao.findById(mailDto.getContentID());
-        
-       if(currentSender==null) {
-    	   throw new UserNotFoundException("User session expired, Please Login Again");
-       }
-       else {
-	        
-	        	mail.setSender(currentSender);
-		        
-//	        	this.checkIfUserExist(mailDto.getRecievers());
-//		        mail.setRecievers(mailDto.getRecievers());
-	        	
-//	        	for(User user :mailDto.getRecievers()) {
-//	        		try {
-//		        		if(checkIfUserExist(user))
-//		        			mail.getRecievers().add(user);
-//	        		}
-//	        		catch(Exception e) {
-//	        			System.out.println(e.getMessage());
-//	        		}
-//	        	}
-	        	
-	        	List<User> validUsers=mailDto.getRecievers().stream().filter((u1)->this.checkIfUserExist(u1)).collect(Collectors.toList());
-		        
-	        	mail.setRecievers(validUsers);
-                mail.setSubject(mailDto.getSubject());
-		        mail.setBody(mailDto.getBody());
-				mail.setTimeStamp(ZonedDateTime.now());
-
-                if(content.isPresent()){
-                    mail.setContent(content.get());
-                }
-
-				
-				System.out.println("Before Mail Save");
-				System.out.println(mailDto.getRecievers());
-				mailDao.save(mail);
-				System.out.println("After Mail Save");
-				
-				Optional<User> optSender=userDao.findByEmail(mail.getSender().getEmail());
-		
-				User sender=optSender.get();
-		
-				List<Mail> sentBox=sender.getSent();
-		
-				sentBox.add(mail);
-		
-				System.out.println("Before Sender Save");
-				
-				userDao.save(sender);
-				System.out.println("After Sender Save");
-		
-				
-				return true;
-			
-    	    
-       }
+		return true;
 	}
 
-    @Override
-    public boolean starredMail(int mailId) {
-    	
-    	
-        User currentUser = getCurrentUser.getCurrentUser();
-        if(currentUser==null) {
-        	throw new UsernameNotFoundException("User session expired, Please Login Again");
-        }
-        else {
-	        Optional<Mail> mailOptional = mailDao.findById(mailId);
-	        if(mailOptional.isPresent()) {
-	        	if(currentUser.getStarred().contains(mailOptional.get())) {
-	        		currentUser.getStarred().remove(mailOptional.get());
-	        		userDao.save(currentUser);
-	        		return false;
-	        	}
-	        	else {
-		        currentUser.getStarred().add(mailOptional.get());
-		
-		        userDao.save(currentUser);
-		
-		        return true;
-	        	}
-	        }
-	        else {
-	        	throw new NoMailFound("Mail Does not Exist");
-	        }
-        }
-    }
+	@Override
+	public boolean deleteUser() {
+		User currentUser = getCurrentUser.getCurrentUser();
+		if (currentUser == null) {
+			throw new UsernameNotFoundException("User session expired, Please Login Again");
+		} else {
+			userDao.delete(currentUser);
 
-    @Override
-    public boolean draftMail(MailDto mailDto) {
-        
-    	User currentUser = getCurrentUser.getCurrentUser();
-        
-        if(currentUser==null) {
-        	throw new UsernameNotFoundException("User session expired, Please Login Again");
-        }
-        else {
-            Mail mail = new Mail();
-            mail.setSender(currentUser);
-            mail.setBody(mailDto.getBody());
-	        mail.setTimeStamp(ZonedDateTime.now());
-            mail.setRecievers(mailDto.getRecievers());
-	        mailDao.save(mail);
-	
-	        currentUser.getDraft().add(mail);
-	
-	        userDao.save(currentUser);
-	
-	        return true;
-        }
+			getCurrentUser.logout();
 
-    }
+			return true;
+		}
+
+	}
+
+	@Override
+	public boolean sentMail(MailDto mailDto) {
+
+		Mail mail = new Mail();
+
+		User currentSender = getCurrentUser.getCurrentUser();
+
+		Optional<Content> content = contentDao.findById(mailDto.getContentID());
+
+		if (currentSender == null) {
+			throw new UserNotFoundException("User session expired, Please Login Again");
+		} else {
+
+			mail.setSender(currentSender);
+
+			List<User> validUsers = mailDto.getRecievers().stream().filter((u1) -> this.checkIfUserExist(u1))
+					.collect(Collectors.toList());
+
+			mail.setRecievers(validUsers);
+			mail.setSubject(mailDto.getSubject());
+			mail.setBody(mailDto.getBody());
+			mail.setTimeStamp(ZonedDateTime.now());
+
+			if (content.isPresent()) {
+				mail.setContent(content.get());
+			}
+
+			mailDao.save(mail);
+
+			Optional<User> optSender = userDao.findByEmail(mail.getSender().getEmail());
+
+			User sender = optSender.get();
+
+			List<Mail> sentBox = sender.getSent();
+
+			sentBox.add(mail);
+
+			userDao.save(sender);
+
+			return true;
+
+		}
+	}
+
+	@Override
+	public boolean starredMail(int mailId) {
+
+		User currentUser = getCurrentUser.getCurrentUser();
+		if (currentUser == null) {
+			throw new UsernameNotFoundException("User session expired, Please Login Again");
+		} else {
+			Optional<Mail> mailOptional = mailDao.findById(mailId);
+			if (mailOptional.isPresent()) {
+				if (currentUser.getStarred().contains(mailOptional.get())) {
+					currentUser.getStarred().remove(mailOptional.get());
+					userDao.save(currentUser);
+					return false;
+				} else {
+					currentUser.getStarred().add(mailOptional.get());
+
+					userDao.save(currentUser);
+
+					return true;
+				}
+			} else {
+				throw new NoMailFound("Mail Does not Exist");
+			}
+		}
+	}
+
+	@Override
+	public boolean draftMail(MailDto mailDto) {
+
+		User currentUser = getCurrentUser.getCurrentUser();
+
+		if (currentUser == null) {
+			throw new UsernameNotFoundException("User session expired, Please Login Again");
+		} else {
+			Mail mail = new Mail();
+			mail.setSender(currentUser);
+			mail.setBody(mailDto.getBody());
+			mail.setTimeStamp(ZonedDateTime.now());
+			mail.setRecievers(mailDto.getRecievers());
+			mailDao.save(mail);
+
+			currentUser.getDraft().add(mail);
+
+			userDao.save(currentUser);
+
+			return true;
+		}
+
+	}
 
 	@Override
 	public boolean deleteMail(int mailId) {
 
-		User currentLogenInUser=getCurrentUser.getCurrentUser();
+		User currentLogenInUser = getCurrentUser.getCurrentUser();
 
+		if (currentLogenInUser == null) {
+			throw new UsernameNotFoundException("User session expired, Please Login Again");
+		} else {
+			Optional<Mail> mail = mailDao.findById(mailId);
 
-//		if(currentLogenInUser==null) {
-//        	throw new UsernameNotFoundException("User session expired, Please Login Again");
-//        }
-//        else {
-//        	//If the current user has sent and recieved mail then only we can delete it
-//        	System.out.println("Mail before added to trash");
-//
-//
-//        	List<Mail> allMails=new ArrayList<>();
-//        	allMails.addAll(currentLogenInUser.getSent());
-//        	allMails.addAll(currentLogenInUser.getDraft());
-//
-//        	allMails.addAll(mailDao.findByRecievers(currentLogenInUser));
-//
-//			if(allMails.contains(mail)) {
-//				currentLogenInUser.getTrashMails().add(mail);
-//				System.out.println("Mail added to Trash");
-//				userDao.save(currentLogenInUser);
-//				return true;
-//			}
-//			else{
-//				throw new NoMailFound("Mail Does not Exist");
-//			}
-//        }
+			List<Mail> allMail = mailService.getAllMail();
 
-        if(currentLogenInUser==null) {
-            throw new UsernameNotFoundException("User session expired, Please Login Again");
-        }
-        else {
-            Optional<Mail> mail = mailDao.findById(mailId);
+			Mail temp = null;
+			for (Mail mail1 : allMail) {
+				if (mail1.getMailId() == mailId) {
+					temp = mail1;
+					break;
+				}
+			}
 
-            List<Mail> allMail = mailService.getAllMail();
+			if (temp != null) {
 
-            Mail temp = null;
-            for(Mail mail1:allMail){
-                if(mail1.getMailId()==mailId){
-                    temp = mail1;
-                    break;
-                }
-            }
+				List<Mail> inbox = mailService.inbox();
+				inbox.remove(temp);
 
-            if (temp != null){
+				temp.getRecievers().remove(currentLogenInUser);
+				mailDao.save(temp);
 
-                List<Mail> inbox = mailService.inbox();
-                inbox.remove(temp);
+				List<Mail> sentBox = currentLogenInUser.getSent();
+				sentBox.remove(temp);
 
-                temp.getRecievers().remove(currentLogenInUser);
-                mailDao.save(temp);
+				List<Mail> draftBox = currentLogenInUser.getDraft();
+				draftBox.remove(temp);
 
-                List<Mail> sentBox = currentLogenInUser.getSent();
-                sentBox.remove(temp);
+				List<Mail> starred = currentLogenInUser.getStarred();
+				starred.remove(temp);
 
-                List<Mail> draftBox = currentLogenInUser.getDraft();
-                draftBox.remove(temp);
+				currentLogenInUser.getTrashMails().add(temp);
 
-                List<Mail> starred = currentLogenInUser.getStarred();
-                starred.remove(temp);
+				userDao.save(currentLogenInUser);
 
-                currentLogenInUser.getTrashMails().add(temp);
+			} else {
+				throw new NoMailFound("Mail Not found");
+			}
 
-                userDao.save(currentLogenInUser);
+		}
 
-            }else{
-                throw new NoMailFound("Mail Not found");
-            }
-
-        }
-
-        return true;
+		return true;
 
 	}
-
 
 	@Override
 	public boolean restoreMail(Mail mail) {
-		// TODO Auto-generated method stub
-		User currentLogenInUser=getCurrentUser.getCurrentUser();
-		if(currentLogenInUser==null) {
-        	throw new UsernameNotFoundException("User session expired, Please Login Again");
-        }
-        else {
-			//If mail exist in trash box only then we can restore
-			if(currentLogenInUser.getTrashMails().contains(mail)) {
+		User currentLogenInUser = getCurrentUser.getCurrentUser();
+		if (currentLogenInUser == null) {
+			throw new UsernameNotFoundException("User session expired, Please Login Again");
+		} else {
+			// If mail exist in trash box only then we can restore
+			if (currentLogenInUser.getTrashMails().contains(mail)) {
 
 				currentLogenInUser.getTrashMails().remove(mail);
-                mail.getRecievers().add(currentLogenInUser);
-                mailDao.save(mail);
+				mail.getRecievers().add(currentLogenInUser);
+				mailDao.save(mail);
 				userDao.save(currentLogenInUser);
-			
+
 				return true;
-			}
-			else {
+			} else {
 				throw new NoMailFound("Mail Does not Exist in Trsh Box");
 			}
-        }
+		}
 	}
 
-    @Override
-    public boolean isValidPassword(String password) {
-        if(password == null){
-            return false;
-        }
+	@Override
+	public boolean isValidPassword(String password) {
+		if (password == null) {
+			return false;
+		}
 
-        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
-        Pattern p = Pattern.compile(regex);
+		String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
+		Pattern p = Pattern.compile(regex);
 
-        Matcher m = p.matcher(password);
+		Matcher m = p.matcher(password);
 
-        return m.matches();
-    }
+		return m.matches();
+	}
 
-    public boolean checkAge(LocalDate date){
+	public boolean checkAge(LocalDate date) {
 
-        LocalDate today = LocalDate.now();
+		LocalDate today = LocalDate.now();
 
-        if(today.getYear()-date.getYear() >= 18 ) {
-            return true;
-        }
-        return false;
-    }
-    
-    public boolean checkIfUserExist(User user) {
-    	
-    	
-    		if(!userDao.findByEmail(user.getEmail()).isPresent()) {
-    			throw new UserNotFoundException("User with email "+user.getEmail()+" does not exist");
-    		}
-    	
-    	
-    	return true;
-    }
+		if (today.getYear() - date.getYear() >= 18) {
+			return true;
+		}
+		return false;
+	}
 
-    @Override
-    public void emptyTrash() {
-        User currentLogedInUser = getCurrentUser.getCurrentUser();
+	public boolean checkIfUserExist(User user) {
 
-        if(currentLogedInUser==null) {
-            throw new UsernameNotFoundException("User session expired, Please Login Again");
-        }else {
-            currentLogedInUser.setTrashMails(null);
-            userDao.save(currentLogedInUser);
-        }
+		if (!userDao.findByEmail(user.getEmail()).isPresent()) {
+			throw new UserNotFoundException("User with email " + user.getEmail() + " does not exist");
+		}
 
-    }
+		return true;
+	}
+
+	@Override
+	public void emptyTrash() {
+		User currentLogedInUser = getCurrentUser.getCurrentUser();
+
+		if (currentLogedInUser == null) {
+			throw new UsernameNotFoundException("User session expired, Please Login Again");
+		} else {
+			currentLogedInUser.setTrashMails(null);
+			userDao.save(currentLogedInUser);
+		}
+
+	}
 
 }
