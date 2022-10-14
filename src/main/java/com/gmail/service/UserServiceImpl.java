@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 			throw new UsernameNotFoundException("User session expired, Please Login Again");
 		} else {
 			userDao.delete(currentUser);
-
+			System.out.println("check");
 			getCurrentUser.logout();
 
 			return true;
