@@ -7,9 +7,7 @@ This project is built by a team of 3 members.
 
 ## ER Diagram:
 
-![ER Diagram](https://github.com/Arora-Shivam/Spring-Gmail-Project/blob/master/src/main/resources/static/ER-Diagram.png)
-
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embedded/3230b4ca-3702-4a8b-85d6-4b80bdced604" id="~L9Zqg9DB6dq"></iframe></div>
+![ER Diagram](https://github.com/Arora-Shivam/Spring-Gmail-Project/blob/master/src/main/resources/static/MailApplicationERDiagram.jpeg)
 
 ## Features:
 - Authentication
