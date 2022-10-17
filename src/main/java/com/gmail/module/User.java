@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(indexes = {
-		@Index(name = "idx_user_mobile",columnList = "mobile_number")
+		@Index(name = "idx_user_mobile",columnList = "mobile_number",unique = true)
 })
 public class User {
 
