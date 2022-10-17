@@ -31,9 +31,12 @@ public class AttachmentController {
     // Request Type? --> Post request
     // Input 		 --> need to upload required file as MultipartFile
     @PostMapping("/attachment")
-    public ResponseEntity<Content> UploadFile(@RequestParam("file") MultipartFile file) throws Exception {
-        Content content = attachementService.saveAttachment(file);
-
+    public ResponseEntity<Content> UploadFile(@RequestParam("file") MultipartFile[] files) throws Exception {
+    	
+    	
+    		Content content = attachementService.saveAttachment(files);
+    		
+    	
 
         return new ResponseEntity<>(content, HttpStatus.OK);
     }

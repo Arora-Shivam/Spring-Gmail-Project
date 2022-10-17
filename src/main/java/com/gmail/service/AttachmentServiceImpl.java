@@ -21,20 +21,21 @@ public class AttachmentServiceImpl implements AttachmentService {
 	private AttachmentDao attachmentDao;
 
 	@Override
-	public Content saveAttachment(MultipartFile file) throws Exception {
+	public Content saveAttachment(MultipartFile[] files) throws Exception {
 
 		Content content = new Content();
 
 		Content res = contentDao.save(content);
-
-		Attachment attachment = new Attachment();
-		attachment.setFileName(file.getOriginalFilename());
-		attachment.setFileType(file.getContentType());
-		attachment.setData(file.getBytes());
-		attachment.setContent(res);
-
-		res.getAttachments().add(attachment);
-
+		for(MultipartFile file : files) {
+			
+			Attachment attachment = new Attachment();
+			attachment.setFileName(file.getOriginalFilename());
+			attachment.setFileType(file.getContentType());
+			attachment.setData(file.getBytes());
+			attachment.setContent(res);
+			res.getAttachments().add(attachment);
+			
+		}
 		return contentDao.save(res);
 	}
 

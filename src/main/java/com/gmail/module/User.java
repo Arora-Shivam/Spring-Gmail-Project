@@ -4,7 +4,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -20,6 +26,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(indexes = {
+		@Index(name = "idx_user_mobile",columnList = "mobile_number")
+})
 public class User {
 
 	@Id
@@ -34,8 +43,9 @@ public class User {
 	@NotNull
 	@Pattern(regexp = "[a-zA-Z]{3,12}", message = "Last Name must not contains numbers or special characters")
 	private String lastName;
+	
 
-	@NotNull
+	@Column(name = "mobile_number", nullable = false)
 	@Pattern(regexp = "[6-9]{1}[0-9]{9}", message = "Mobile number must have 10 digits")
 	private String mobileNumber;
 
