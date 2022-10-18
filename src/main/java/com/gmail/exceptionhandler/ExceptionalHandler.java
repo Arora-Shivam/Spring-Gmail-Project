@@ -15,6 +15,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.gmail.exception.ErrorDetails;
 import com.gmail.exception.NoMailFound;
+import com.gmail.exception.PasswordMisMatchException;
 import com.gmail.exception.UserAlreadyExistException;
 import com.gmail.exception.UserNotFoundException;
 
@@ -100,6 +101,14 @@ public class ExceptionalHandler {
 		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.CONFLICT);
 	}
 
+	@ExceptionHandler(PasswordMisMatchException.class)
+	public ResponseEntity<ErrorDetails> passwordMismatchException(PasswordMisMatchException exception,
+			WebRequest webRequest) {
+
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
+				"BAD Request", exception.getMessage());
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.CONFLICT);
+	}
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> generalException(Exception exception, WebRequest request) {
 

@@ -103,9 +103,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean sentMail(MailDto mailDto) {
-
+			
 		Mail mail = new Mail();
-
+		
 		User currentSender = getCurrentUser.getCurrentUser();
 
 		Optional<Content> content = contentDao.findById(mailDto.getContentID());

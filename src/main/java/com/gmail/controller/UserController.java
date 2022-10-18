@@ -42,7 +42,7 @@ public class UserController {
 	// What is does? --> registers the User with the system
 	// Request Type? --> Post request
 	// Input 		 --> User as the Request Body
-    @PostMapping("/user")
+    @PostMapping("/register")
     public ResponseEntity<String> addUser(@Valid @RequestBody User user){
 
 		boolean response = userService.addUser(user);
@@ -67,8 +67,9 @@ public class UserController {
 	// Input 		 --> MailDto as the Request Body
     @PostMapping(value = "/send")
     public ResponseEntity<String> sendMail(@Valid @RequestBody MailDto mailDto){
-		
+    
     	userService.sentMail(mailDto);
+    	
     	return new ResponseEntity<String>("Mail Sent",HttpStatus.OK);
 	}
 	
@@ -153,5 +154,11 @@ public class UserController {
 		userService.emptyTrash();
 		return new ResponseEntity<>("Trash cleared", HttpStatus.ACCEPTED);
 	}
-
+	
+	@GetMapping("/login")
+	public ResponseEntity<String> login(){
+		
+		
+		return new ResponseEntity<String>("Loggen In",HttpStatus.ACCEPTED);
+	}
 }

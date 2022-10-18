@@ -38,7 +38,7 @@ public class GmailUserNamePasswordAuthenticationProvider implements Authenticati
 			if (passwordEncoder.matches(authenticationPassword, user.getPassword())) {
 				List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 				grantedAuthorities.add(simpleGrantedAuthority);
-
+				System.out.println(grantedAuthorities);
 				return new UsernamePasswordAuthenticationToken(user.getEmail(), authenticationPassword,
 						grantedAuthorities);
 			} else {
