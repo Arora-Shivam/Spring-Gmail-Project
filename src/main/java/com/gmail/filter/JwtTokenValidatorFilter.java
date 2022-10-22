@@ -2,6 +2,7 @@ package com.gmail.filter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -52,13 +54,16 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter{
 				
 				
 				String username = String.valueOf(claims.get("username"));
-				System.out.println(username);
-				
-				System.out.println(claims);
-				
+	
 				String autorities= String.valueOf( claims.get("authorities"));
+			
+				String[] at=autorities.split("[{[=}]]");
+			
+				SimpleGrantedAuthority simpleGrantedAuthority=new SimpleGrantedAuthority(at[2]);
+			
 				
-				List<GrantedAuthority> a=AuthorityUtils.commaSeparatedStringToAuthorityList(autorities);
+				List<GrantedAuthority> a=new ArrayList<>();
+				a.add(simpleGrantedAuthority);
 				
 				Authentication auth = new UsernamePasswordAuthenticationToken(username,null,a);
 				
