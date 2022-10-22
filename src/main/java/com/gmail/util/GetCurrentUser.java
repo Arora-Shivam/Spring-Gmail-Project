@@ -1,6 +1,10 @@
 package com.gmail.util;
 
+import java.util.Arrays;
 import java.util.Optional;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,12 +31,15 @@ public class GetCurrentUser {
 		String username = (String)principal;
 		
 		
+		
 		Optional<User> currentUser = userDao.findByEmail(username);
 
 		return currentUser.get();
 	}
-
+	
+	
 	public void logout() {
+		
 		SecurityContextHolder.clearContext();
 	}
 }

@@ -2,29 +2,24 @@ package com.gmail.filter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.gmail.constant.SecurityConstants;
-import com.gmail.exception.PasswordMisMatchException;
 import com.gmail.exception.UserAlreadyExistException;
 
 import io.jsonwebtoken.Claims;
@@ -38,7 +33,8 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter{
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		String jwt = request.getHeader(SecurityConstants.JWT_HEADER);
+		//String jwt = request.getHeader(SecurityConstants.JWT_HEADER);
+		String jwt=this.getJwtCookieValue(request, "Authorization");
 		
 		if (null != jwt) {
 			try {
@@ -67,7 +63,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter{
 				Authentication auth = new UsernamePasswordAuthenticationToken(username,null,a);
 				
 				
-
+				
 				
 				SecurityContextHolder.getContext().setAuthentication(auth);
 				
@@ -83,5 +79,13 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter{
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		return request.getServletPath().equals("/mail/login");
+	}
+	
+	private String getJwtCookieValue(HttpServletRequest req, String cookieName) {
+	    return Arrays.stream(req.getCookies())
+	            .filter(c -> c.getName().equals(cookieName))
+	            .findFirst()
+	            .map(Cookie::getValue)
+	            .orElse(null);
 	}
 }

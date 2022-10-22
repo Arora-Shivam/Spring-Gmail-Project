@@ -3,11 +3,15 @@ package com.gmail.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +27,7 @@ import com.gmail.module.User;
 import com.gmail.repository.MailDao;
 import com.gmail.service.MailService;
 import com.gmail.service.UserService;
+import com.gmail.util.GetCurrentUser;
 
 @RestController
 @RequestMapping("/mail")
@@ -67,9 +72,11 @@ public class UserController {
 	// Input 		 --> MailDto as the Request Body
     @PostMapping(value = "/send")
     public ResponseEntity<String> sendMail(@Valid @RequestBody MailDto mailDto){
+    	
+    	
     
     	userService.sentMail(mailDto);
-    	
+
     	return new ResponseEntity<String>("Mail Sent",HttpStatus.OK);
 	}
 	
@@ -159,6 +166,17 @@ public class UserController {
 	public ResponseEntity<String> login(){
 		
 		
+		
 		return new ResponseEntity<String>("Loggen In",HttpStatus.ACCEPTED);
 	}
+	
+	@GetMapping("/logout")
+	public ResponseEntity<String> logout(){
+		
+		
+		SecurityContextHolder.clearContext();
+		
+		return new ResponseEntity<String>("Logged out",HttpStatus.ACCEPTED);
+	}
+	
 }
