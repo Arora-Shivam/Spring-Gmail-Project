@@ -50,7 +50,8 @@ public class JwtTokenGeneratorFiltor extends OncePerRequestFilter{
 					.signWith(key).compact();
 		
 			Cookie jwtCookie=new Cookie("Authorization", jwt);
-
+			jwtCookie.setHttpOnly(true);
+			
 			response.addCookie(jwtCookie);
 			
 			response.setHeader(SecurityConstants.JWT_HEADER, jwt);
