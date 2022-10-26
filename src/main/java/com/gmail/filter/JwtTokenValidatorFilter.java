@@ -36,7 +36,13 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter{
 		// TODO Auto-generated method stub
 		
 		//String jwt = request.getHeader(SecurityConstants.JWT_HEADER);
-		String jwt=this.getJwtCookieValue(request, "Authorization");
+		String jwt=null;
+		try {
+			jwt=this.getJwtCookieValue(request, "Authorization");
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		if (null != jwt) {
 			try {
@@ -83,7 +89,8 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter{
 	
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return request.getServletPath().equals("/mail/login");
+		return request.getServletPath().equals("/mail/login") || request.getServletPath().equals("/mail/register")
+				|| request.getServletPath().equals("/");
 	}
 	
 	private String getJwtCookieValue(HttpServletRequest req, String cookieName) {
