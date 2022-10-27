@@ -7,7 +7,7 @@ This project is built by a team of 3 members.
 
 ## ER Diagram:
 
-![ER Diagram](https://github.com/Arora-Shivam/Spring-Gmail-Project/blob/mastersrc/main/resources/static/MailApplicationERDiagram.jpeg)
+![ER Diagram](https://tinyurl.com/23g8v2gq)
 
 ## Features:
 - Authentication
